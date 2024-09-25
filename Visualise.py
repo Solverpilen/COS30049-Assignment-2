@@ -8,7 +8,7 @@ WorkingDirectory = "COS30049-Assignment-2/"
 RawDataDirectory = WorkingDirectory + "Raw Datasets/"
 CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
 
-Data5 = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv", 
+Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv", 
                     dtype={
                         "Suburb": "string",
                         "Rooms": "Int32",
@@ -27,16 +27,18 @@ Data5 = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
                         }
                     )
 
-plt.figure(figsize=(12, 10))
-corr_matrix = Data5.corr(numeric_only=True)
+plt.figure(figsize=(10, 8))
+corr_matrix = Data.corr(numeric_only=True)
 sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
 plt.title('Correlation Matrix Heatmap')
 plt.show()
 
-plt.figure(figsize=(10, 6))
-plt.scatter(Data5['Rooms'], Data5['Price'], alpha=0.6, color='b')
+plt.figure(figsize=(10, 8))
+plt.scatter(Data['Rooms'], Data['Price'], alpha=0.6, color='b')
 plt.title('Scatter Plot of Average Rooms vs. House Price')
 plt.xlabel('Average Number of Rooms per Household (AveRooms)')
 plt.ylabel('House Price (in $100,000)')
 plt.grid(True)
 plt.show()
+
+plt.figure(figsize=(10, 8))

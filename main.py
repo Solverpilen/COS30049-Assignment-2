@@ -19,15 +19,10 @@ df2 = df2[columns]
 df3 = df3[columns]
 df4 = df4[columns]
 
-<<<<<<< HEAD
-
-
-=======
 combined_df = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
 df_cleaned = combined_df.dropna()
 df_cleaned = df_cleaned.drop_duplicates()
->>>>>>> 0272e0d4a08e8a6ec633f3ee54a892bfafa0c30d
 
 #print(combined_df)
 
