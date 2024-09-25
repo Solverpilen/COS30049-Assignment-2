@@ -1,33 +1,17 @@
+import matplotlib.pyplot as plt
 import pandas as pd
-
-pd.options.mode.use_inf_as_na = True
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 
 WorkingDirectory = "COS30049-Assignment-2/"
 RawDataDirectory = WorkingDirectory + "Raw Datasets/"
 CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
 
-df1 = pd.read_csv(CleanDataDirectory + 'Dataset1_Clean.csv')
-df2 = pd.read_csv(CleanDataDirectory + 'Dataset2_Clean.csv')
-df3 = pd.read_csv(CleanDataDirectory + 'Dataset3_Clean.csv')
-df4 = pd.read_csv(CleanDataDirectory + 'Dataset4_Clean.csv')
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# columns = ['Suburb', 'Rooms', 'Type', 'Date', 'Price']
-
-# the common columns for each data set is Suburb, rooms, type, price, rooms
-# df1 = df1[columns]
-# df2 = df2[columns]
-# df3 = df3[columns]
-# df4 = df4[columns]
-
-combined_df = pd.concat([df1, df2, df3, df4], ignore_index=True)
-
-df_cleaned = combined_df.dropna()
-df_cleaned = df_cleaned.drop_duplicates()
-
-#print(combined_df)
-
-df_cleaned.to_csv(
-    CleanDataDirectory + "Dataset_Combined.csv", 
-    sep=",",
-    na_rep=""
-    )
+# Create and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
