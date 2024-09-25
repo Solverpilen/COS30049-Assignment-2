@@ -23,19 +23,12 @@ dev site - development site;
 o res - other residential.
 
 Date: Date sold
-
 Distance: Distance from CBD in Kilometres
-
-Bedroom2 : Scraped # of Bedrooms (from different source)
-
+Bedroom: Scraped # of Bedrooms (from different source)
 Bathroom: Number of Bathrooms
-
 Car: Number of carspots
-
 Landsize: Land Size in Metres
-
 Lattitude: Self explanitory
-
 Longtitude: Self explanitory
 """
 
