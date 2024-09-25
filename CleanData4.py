@@ -39,7 +39,7 @@ Lattitude: Self explanitory
 Longtitude: Self explanitory
 """
 
-Data5Raw = pd.read_csv(RawDataDirectory + "Melbourne_housing.csv", 
+Data4Raw = pd.read_csv(RawDataDirectory + "Melbourne_housing.csv", 
                     dtype={
                         "Suburb": "string",
                         "Address": "string",
@@ -66,20 +66,38 @@ Data5Raw = pd.read_csv(RawDataDirectory + "Melbourne_housing.csv",
                         }
                     )
 
-# missing_values = Data5Raw.isnull().sum()
-# print(missing_values)
+missing_values = Data4Raw.isnull().sum()
+print(missing_values)
 
-Data5Raw = Data5Raw.drop(columns=["Address", "Method", "SellerG", "BuildingArea", "Regionname", "YearBuilt", "Propertycount", "CouncilArea"])
-Data5Raw = Data5Raw.dropna()
-Data5Raw = Data5Raw.drop_duplicates()
+Data4Raw = Data4Raw.drop(columns=["Address", "Method", "SellerG", "BuildingArea", "Regionname", "YearBuilt", "Propertycount", "CouncilArea", "ParkingArea"])
+Data4Raw = Data4Raw.dropna()
+Data4Raw = Data4Raw.drop_duplicates()
+Data4Raw = Data4Raw.reindex(
+    [
+        "Date",
+        "Suburb",
+        "Postcode",
+        "Latitude",
+        "Longtitude",
+        "Distance",
+        "Type",
+        "Rooms",
+        "Bedroom",
+        "Bathroom",
+        "Car",
+        "Landsize",
+        "Price"
+    ], 
+    axis=1
+    )
 
-Data5Raw.to_csv(
-    CleanDataDirectory + "Dataset5_Clean.csv", 
+Data4Raw.to_csv(
+    CleanDataDirectory + "Dataset4_Clean.csv", 
     sep=",",
     na_rep=""
     )
 
-Data5 = pd.read_csv(CleanDataDirectory + "Dataset5_Clean.csv", 
+Data5 = pd.read_csv(CleanDataDirectory + "Dataset4_Clean.csv", 
                     dtype={
                         "Suburb": "string",
                         "Rooms": "Int32",
@@ -93,7 +111,6 @@ Data5 = pd.read_csv(CleanDataDirectory + "Dataset5_Clean.csv",
                         "Landsize": "Int32",
                         "Latitude": "float",
                         "Longtitude": "float",
-                        "ParkingArea": "string",
                         "Price": "Int32"
                         }
                     )
