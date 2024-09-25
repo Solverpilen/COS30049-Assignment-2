@@ -8,7 +8,7 @@ RawDataDirectory = WorkingDirectory + "Raw Datasets/"
 CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
 
 
-Data2Raw = pd.read_csv(RawDataDirectory + "MELBOURNE_HOUSE_PRICES_LESS.csv", 
+Data1Raw = pd.read_csv(RawDataDirectory + "MELBOURNE_HOUSE_PRICES_LESS.csv", 
                     dtype={
                         "Suburb": "string",
                         "Address": "string",
@@ -27,13 +27,13 @@ Data2Raw = pd.read_csv(RawDataDirectory + "MELBOURNE_HOUSE_PRICES_LESS.csv",
                     )
 
 
-Data2Raw = Data2Raw.drop(columns=["Address", "Method", "SellerG", "CouncilArea"])
+Data1Raw = Data1Raw.drop(columns=["Address", "Method", "SellerG", "CouncilArea"])
 
-Data2Raw = Data2Raw.dropna()
+Data1Raw = Data1Raw.dropna()
 
-DataRaw = DataRaw.drop_duplicates()
+Data1Raw = Data1Raw.drop_duplicates()
 
-DataRaw.to_csv(
+Data1Raw.to_csv(
     CleanDataDirectory + "Dataset1_Clean.csv", 
     sep=",",
     na_rep=""
