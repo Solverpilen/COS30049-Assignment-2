@@ -11,13 +11,13 @@ df2 = pd.read_csv(CleanDataDirectory + 'Dataset2_Clean.csv')
 df3 = pd.read_csv(CleanDataDirectory + 'Dataset3_Clean.csv')
 df4 = pd.read_csv(CleanDataDirectory + 'Dataset4_Clean.csv')
 
-columns = ['Suburb', 'Rooms', 'Type', 'Date', 'Price']
+# columns = ['Suburb', 'Rooms', 'Type', 'Date', 'Price']
 
 # the common columns for each data set is Suburb, rooms, type, price, rooms
-df1 = df1[columns]
-df2 = df2[columns]
-df3 = df3[columns]
-df4 = df4[columns]
+# df1 = df1[columns]
+# df2 = df2[columns]
+# df3 = df3[columns]
+# df4 = df4[columns]
 
 combined_df = pd.concat([df1, df2, df3, df4], ignore_index=True)
 
