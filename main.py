@@ -11,7 +11,7 @@ df2 = pd.read_csv(CleanDataDirectory + 'Dataset2_Clean.csv')
 df3 = pd.read_csv(CleanDataDirectory + 'Dataset3_Clean.csv')
 df4 = pd.read_csv(CleanDataDirectory + 'Dataset4_Clean.csv')
 
-columns = ['suburb', 'rooms', 'type', 'date', 'price']
+columns = ['Suburb', 'Rooms', 'Type', 'Date', 'Price']
 
 # the common columns for each data set is Suburb, rooms, type, price, rooms
 df1 = df1[columns]

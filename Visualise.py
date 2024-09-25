@@ -8,7 +8,7 @@ WorkingDirectory = "COS30049-Assignment-2/"
 RawDataDirectory = WorkingDirectory + "Raw Datasets/"
 CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
 
-Data5 = pd.read_csv(CleanDataDirectory + "Dataset5_Clean.csv", 
+Data5 = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv", 
                     dtype={
                         "Suburb": "string",
                         "Rooms": "Int32",
