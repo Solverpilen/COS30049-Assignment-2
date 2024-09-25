@@ -19,8 +19,8 @@ Data2Raw = pd.read_csv(RawDataDirectory + "MELBOURNE_HOUSE_PRICES_LESS.csv",
                         "SellerG": "string",
                         "Date": "string",
                         "Postcode": "string",
-                        "Regionname": "string",
-                        "Propertycount": "Int32",
+                        "RegionName": "string",
+                        "PropertyCount": "Int32",
                         "Distance": "float",
                         "CouncilArea": "string"
                         }
@@ -31,7 +31,19 @@ Data2Raw = Data2Raw.drop(columns=["Address", "Method", "SellerG", "CouncilArea"]
 
 Data2Raw = Data2Raw.dropna()
 
-DataRaw = DataRaw.drop_duplicates()
+Data1Raw = Data1Raw.drop_duplicates()
+Data1Raw = Data1Raw.reindex(
+    [
+        "Date",
+        "Suburb",
+        "Postcode",
+        "Distance",
+        "Type",
+        "Rooms",
+        "Price"
+    ], 
+    axis=1
+    )
 
 DataRaw.to_csv(
     CleanDataDirectory + "Dataset1_Clean.csv", 
@@ -47,8 +59,6 @@ DataCleaned = pd.read_csv(CleanDataDirectory + "Dataset1_Clean.csv",
                         "Price": "Int32",
                         "Date": "string",
                         "Postcode": "string",
-                        "Regionname": "string",
-                        "Propertycount": "Int32",
                         "Distance": "float"
                         }
                     )
