@@ -42,3 +42,4 @@ plt.grid(True)
 plt.show()
 
 plt.figure(figsize=(10, 8))
+plt.plot("Date", "Price", Data)
