@@ -8,7 +8,7 @@ RawDataDirectory = WorkingDirectory + "Raw Datasets/"
 CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
 
 
-Data2Raw = pd.read_csv(RawDataDirectory + "MELBOURNE_HOUSE_PRICES_LESS.csv", 
+Data1Raw = pd.read_csv(RawDataDirectory + "MELBOURNE_HOUSE_PRICES_LESS_acedit.csv", 
                     dtype={
                         "Suburb": "string",
                         "Address": "string",
@@ -19,39 +19,27 @@ Data2Raw = pd.read_csv(RawDataDirectory + "MELBOURNE_HOUSE_PRICES_LESS.csv",
                         "SellerG": "string",
                         "Date": "string",
                         "Postcode": "string",
-                        "RegionName": "string",
-                        "PropertyCount": "Int32",
+                        "Regionname": "string",
+                        "Propertycount": "Int32",
                         "Distance": "float",
                         "CouncilArea": "string"
                         }
                     )
 
 
-Data2Raw = Data2Raw.drop(columns=["Address", "Method", "SellerG", "CouncilArea"])
+Data1Raw = Data1Raw.drop(columns=["Address", "Method", "SellerG", "CouncilArea", "BuildingArea", "YearBuilt", "Regionname", "Propertycount"])
 
-Data2Raw = Data2Raw.dropna()
+Data1Raw = Data1Raw.dropna()
 
 Data1Raw = Data1Raw.drop_duplicates()
-Data1Raw = Data1Raw.reindex(
-    [
-        "Date",
-        "Suburb",
-        "Postcode",
-        "Distance",
-        "Type",
-        "Rooms",
-        "Price"
-    ], 
-    axis=1
-    )
 
-DataRaw.to_csv(
-    CleanDataDirectory + "Dataset1_Clean.csv", 
+Data1Raw.to_csv(
+    CleanDataDirectory + "Dataset2_Clean.csv", 
     sep=",",
     na_rep=""
     )
 
-DataCleaned = pd.read_csv(CleanDataDirectory + "Dataset1_Clean.csv", 
+DataCleaned = pd.read_csv(CleanDataDirectory + "Dataset2_Clean.csv", 
                     dtype={
                         "Suburb": "string",
                         "Rooms": "Int32",
@@ -59,6 +47,8 @@ DataCleaned = pd.read_csv(CleanDataDirectory + "Dataset1_Clean.csv",
                         "Price": "Int32",
                         "Date": "string",
                         "Postcode": "string",
+                        "Regionname": "string",
+                        "Propertycount": "Int32",
                         "Distance": "float"
                         }
                     )
