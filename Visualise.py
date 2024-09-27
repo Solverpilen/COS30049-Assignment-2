@@ -13,7 +13,7 @@ Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
                         "Suburb": "string",
                         "Rooms": "Int32",
                         "Type": "string",
-                        "Date": "string",
+                        "Date": "Int32",
                         "Distance": "float",
                         "Postcode": "string",
                         "Bedroom": "Int32",
@@ -27,24 +27,24 @@ Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
                         }
                     )
 
-# plt.figure(figsize=(10, 8))
-# corr_matrix = Data.corr(numeric_only=True)
-# sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
-# plt.title('Correlation Matrix Heatmap')
-# plt.show()
-
-# plt.figure(figsize=(10, 8))
-# plt.scatter(Data['Rooms'], Data['Price'], alpha=0.6, color='b')
-# plt.title('Scatter Plot of Average Rooms vs. House Price')
-# plt.xlabel('Average Number of Rooms per Household (AveRooms)')
-# plt.ylabel('House Price (in $100,000)')
-# plt.grid(True)
-# plt.show()
+plt.figure(figsize=(10, 8))
+corr_matrix = Data.corr(numeric_only=True)
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Matrix Heatmap')
+plt.show()
 
 plt.figure(figsize=(10, 8))
-plt.plot("Date", "Price", Data)
-plt.title('Line Graph of Sell Date vs. House Price')
-plt.xlabel('Date')
+plt.scatter(Data['Date'], Data['Price'], alpha=0.6, color='b')
+plt.title('Scatter Plot of Date Sold vs. House Price')
+plt.xlabel('Date Sold')
 plt.ylabel('House Price (in $100,000)')
 plt.grid(True)
 plt.show()
+
+# plt.figure(figsize=(10, 8))
+# plt.plot("Date", "Price", data=Data)
+# plt.title('Line Graph of Sell Date vs. House Price')
+# plt.xlabel('Date')
+# plt.ylabel('House Price (in $100,000)')
+# plt.grid(True)
+# plt.show()

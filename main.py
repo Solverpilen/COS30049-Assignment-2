@@ -1,33 +1,39 @@
+import matplotlib.pyplot as plt
 import pandas as pd
-
-pd.options.mode.use_inf_as_na = True
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 
 WorkingDirectory = "COS30049-Assignment-2/"
 RawDataDirectory = WorkingDirectory + "Raw Datasets/"
 CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
 
-df1 = pd.read_csv(CleanDataDirectory + 'Dataset1_Clean.csv')
-df2 = pd.read_csv(CleanDataDirectory + 'Dataset2_Clean.csv')
-df3 = pd.read_csv(CleanDataDirectory + 'Dataset3_Clean.csv')
-df4 = pd.read_csv(CleanDataDirectory + 'Dataset4_Clean.csv')
+Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv")
+X = Data[["Date"]]
+y = Data["Price"]
 
-# columns = ['Suburb', 'Rooms', 'Type', 'Date', 'Price']
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# the common columns for each data set is Suburb, rooms, type, price, rooms
-# df1 = df1[columns]
-# df2 = df2[columns]
-# df3 = df3[columns]
-# df4 = df4[columns]
+# Create and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
 
-combined_df = pd.concat([df1, df2, df3, df4], ignore_index=True)
+# Predict the results on the test set
+y_pred = model.predict(X_test)
 
-df_cleaned = combined_df.dropna()
-df_cleaned = df_cleaned.drop_duplicates()
+# Print model performance
+print('Mean Squared Error: %.2f' % mean_squared_error(y_test, y_pred))
+print('R^2 Score: %.2f' % r2_score(y_test, y_pred))
+# print('Prediction Gradient: %10f' % )
 
-#print(combined_df)
-
-df_cleaned.to_csv(
-    CleanDataDirectory + "Dataset_Combined.csv", 
-    sep=",",
-    na_rep=""
-    )
+# Visualize the results
+plt.figure(figsize=(10, 6))
+plt.scatter(X_test, y_test, color='black', label='Actual values')
+plt.plot(X_test, y_pred, color='blue', linewidth=3, label='Predicted values')
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.title('Linear Regression on Melbourne Housing Dataset')
+plt.legend()
+plt.show()
