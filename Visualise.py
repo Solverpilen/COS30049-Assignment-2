@@ -13,7 +13,7 @@ Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
                         "Suburb": "string",
                         "Rooms": "Int32",
                         "Type": "string",
-                        "Date": "string",
+                        "Date": "Int32",
                         "Distance": "float",
                         "Postcode": "string",
                         "Bedroom": "Int32",
@@ -34,9 +34,9 @@ plt.title('Correlation Matrix Heatmap')
 plt.show()
 
 plt.figure(figsize=(10, 8))
-plt.scatter(Data['Rooms'], Data['Price'], alpha=0.6, color='b')
-plt.title('Scatter Plot of Average Rooms vs. House Price')
-plt.xlabel('Average Number of Rooms per Household (AveRooms)')
+plt.scatter(Data['Date'], Data['Price'], alpha=0.6, color='b')
+plt.title('Scatter Plot of Date Sold vs. House Price')
+plt.xlabel('Date Sold')
 plt.ylabel('House Price (in $100,000)')
 plt.grid(True)
 plt.show()
