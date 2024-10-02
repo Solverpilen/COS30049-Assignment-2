@@ -1,12 +1,13 @@
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.metrics import silhouette_score
 
 pd.options.mode.use_inf_as_na = True
 
-WorkingDirectory = "COS30049-Assignment-2/"
-RawDataDirectory = WorkingDirectory + "Raw Datasets/"
-CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
+WorkingDirectory = "./COS30049-Assignment-2/"
+RawDataDirectory = WorkingDirectory + "Raw_Datasets/"
+CleanDataDirectory = WorkingDirectory + "Cleaned_Datasets/"
 
 
 Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv", 
@@ -59,3 +60,7 @@ plt.show()
 
 predicted_label = model.predict([[1500000, 2]])  
 print(f'The predicted cluster for the sample [Price: 1500000, Bathroom: 2] is: {predicted_label[0]}')
+
+silhouette_avg = silhouette_score(X, all_predictions)
+
+print(f'Silhouette Score: {silhouette_avg}')
