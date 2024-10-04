@@ -1,12 +1,13 @@
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.metrics import silhouette_score
 
 pd.options.mode.use_inf_as_na = True
 
-WorkingDirectory = "COS30049-Assignment-2/"
-RawDataDirectory = WorkingDirectory + "Raw Datasets/"
-CleanDataDirectory = WorkingDirectory + "Cleaned Datasets/"
+WorkingDirectory = "./COS30049-Assignment-2/"
+RawDataDirectory = WorkingDirectory + "Raw_Datasets/"
+CleanDataDirectory = WorkingDirectory + "Cleaned_Datasets/"
 
 
 Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv", 
@@ -29,6 +30,7 @@ Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
 
 
 X = Data[['Price', 'Bathroom']].dropna()  
+X_Bedroom = Data[['Price', 'Bedroom']].dropna()
 
 # Plot original data
 plt.figure(figsize=(12, 6))
@@ -46,6 +48,11 @@ model.fit(X)
 
 all_predictions = model.predict(X)
 
+model_bedroom = KMeans(n_clusters=4, random_state=42)
+model_bedroom.fit(X_Bedroom)
+
+bedroom_predictions = model_bedroom.predict(X_Bedroom)
+
 
 plt.figure(figsize=(12, 6))
 plt.scatter(X['Price'], X['Bathroom'], c=all_predictions, cmap='viridis')
@@ -56,6 +63,24 @@ plt.colorbar(label='Cluster')
 plt.grid(True)
 plt.show()
 
+plt.figure(figsize=(12, 6))
+plt.scatter(X_Bedroom['Price'], X_Bedroom['Bedroom'], c=bedroom_predictions, cmap='viridis')
+plt.title('K-Means Clustering: Price vs Bedroom')
+plt.xlabel('Price')
+plt.ylabel('Bedroom')
+plt.colorbar(label='Cluster')
+plt.grid(True)
+plt.show()
+
 
 predicted_label = model.predict([[1500000, 2]])  
 print(f'The predicted cluster for the sample [Price: 1500000, Bathroom: 2] is: {predicted_label[0]}')
+
+silhouette_avg_bathroom = silhouette_score(X, all_predictions)
+
+print(f'Silhouette Score for Bathroom vs Price: {silhouette_avg_bathroom}')
+
+silhouette_avg_bedroom = silhouette_score(X_Bedroom, bedroom_predictions)
+
+print(f'Silhouette Score for Bedroom vs Price: {silhouette_avg_bedroom}')
+
