@@ -6,7 +6,7 @@
 
 - pandas
 - sckikit-learn
-- seaborn\
+- seaborn
 - matplotlib
 
 ### Execute commands in terminal:
