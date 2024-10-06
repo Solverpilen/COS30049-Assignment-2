@@ -11,9 +11,6 @@
 
 ### Execute commands in terminal:
 
-(Box plot)
-- python COS30049-Assignment-2/Python_Code/Visualise.py
-
 (Regression)
 - python COS30049-Assignment-2/Python_Code/Regression.py
 
