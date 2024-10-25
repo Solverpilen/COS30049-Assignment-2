@@ -1,16 +1,38 @@
-import React from 'react';
 import './App.css';
-import ResponsiveAppBar from './components/navbar/navbar';
+import React from 'react';
+import ResponsiveAppBar from './components/navbar/navbar.js';
+import LineChart from './components/charts/LineChart.js'; 
+import { Grid, Container, Paper } from '@mui/material';
 
 
 function App() {
-	return (
-		<div>
-			<ResponsiveAppBar />
-		</div>
-		
-	);
+
+  return (
+
+  <div className="App">
+    <ResponsiveAppBar/>
+    <div>
+      <h1>React Line Chart with Chart.js</h1>
+      <Container maxWidth="lg" style={{ height: '100vh', display: 'flex' }}>
+      {/* Grid Container to center the charts */}
+      <Grid
+        container
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+        style={{ flex: 1 }}
+      >
+      <LineChart/>
+      </Grid>
+      </Container>
+    </div>
+
+
+
+  </div>
+  );
+
+
 }
-  
 
 export default App;
