@@ -7,9 +7,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 pd.options.mode.use_inf_as_na = True
 
-WorkingDirectory = "COS30049-Assignment-2/"
-RawDataDirectory = WorkingDirectory + "Raw_Datasets/"
-CleanDataDirectory = WorkingDirectory + "Cleaned_Datasets/"
+#WorkingDirectory = "COS30049-Assignment-2/"
+RawDataDirectory = "Raw_Datasets/"
+CleanDataDirectory = "Cleaned_Datasets/"
 
 Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv", 
                    dtype={

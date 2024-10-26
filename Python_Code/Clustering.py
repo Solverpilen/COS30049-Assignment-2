@@ -5,9 +5,9 @@ from sklearn.metrics import silhouette_score
 
 pd.options.mode.use_inf_as_na = True
 
-WorkingDirectory = '/COS30049-Assignment-2/'
-RawDataDirectory =  WorkingDirectory + 'Raw_Datasets/'
-CleanDataDirectory = WorkingDirectory + 'Cleaned_Datasets/'
+#WorkingDirectory = './COS30049-Assignment-2/'
+RawDataDirectory =  'Raw_Datasets/'
+CleanDataDirectory = 'Cleaned_Datasets/'
 
 def affordability_category(price):
     if price <= 100000:
@@ -57,12 +57,12 @@ model.fit(X)
 
 all_predictions = model.predict(X)
 
+model_bedroom = KMeans(n_clusters=4, random_state=42)
+model_bedroom.fit(X_Bedroom)
+
+bedroom_predictions = model_bedroom.predict(X_Bedroom)
+
 X_Bedroom['affordability'] = X_Bedroom['Price'].apply(affordability_category)
-
-#model_bedroom = KMeans(n_clusters=4, random_state=42)
-#model_bedroom.fit(X_Bedroom)
-
-#bedroom_predictions = model_bedroom.predict(X_Bedroom)
 
 color_map = {'very low': 'red', 'low': 'orange', 'medium': 'green', 'high': 'blue'}
 
