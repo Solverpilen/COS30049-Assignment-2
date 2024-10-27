@@ -15,9 +15,6 @@ function App() {
 
 <BrowserRouter>
 
-
-
-
     <Routes>
       <Route path='/' element={<Home/>} />
       <Route path='/Affordability' element={<Affordability/>} />
