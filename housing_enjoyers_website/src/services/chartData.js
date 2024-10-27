@@ -21,3 +21,5 @@ export const generateChartConfig = (label, dataPoints, color, Labels) => {
   
     return { data, options };
   };
+
+  export default generateChartConfig;
