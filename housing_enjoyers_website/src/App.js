@@ -4,18 +4,27 @@ import ResponsiveAppBar from './components/navbar/navbar.js';
 import LineChart from './components/charts/LineChart.js'; 
 import { Grid, Container, Paper } from '@mui/material';
 import PieChart from './components/charts/pieChart.js';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, BrowserRouter } from 'react-router-dom';
+import Affordability from './pages/Affordability.js';
+import Home from './pages/Home.js';
 
 
 function App() {
 
   return (
 
-    
-    <div className="background fade_in_image">
-      <ResponsiveAppBar />
-      <h1 class="fade_in_move title"> Welcome to Housing Enjoyers Predictive Website!</h1>
-    </div>
+<BrowserRouter>
+
+
+
+
+    <Routes>
+      <Route path='/' element={<Home/>} />
+      <Route path='/Affordability' element={<Affordability/>} />
+
+    </Routes>
+
+</BrowserRouter>
   // <div className="App">
   //   <ResponsiveAppBar/>
   //   <div>
