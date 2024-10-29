@@ -1,8 +1,21 @@
+# Libraries
 from fastapi import FastAPI, HTTPException, Request, BackgroundTasks, Depends
-from pydantic import BaseModel
 from pickle import load
+# Local Files
+from models.ModelInputs import ModelInputs
 
 app = FastAPI()
 
-filehandler = open("LinearRegModel.sav", "rb")
-linearRegModel = load(filehandler)
+linearRegModel = load(open("LinearRegModel.sav", "rb"))
+
+
+
+# HTTP Requests
+
+@app.post("/price_prediction")
+def pricePred(input : ModelInputs):
+    pass
+
+@app.get("/price_prediction/")
+def priceGraph():
+    pass
