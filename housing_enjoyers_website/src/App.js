@@ -3,7 +3,7 @@ import React from 'react';
 import ResponsiveAppBar from './components/navbar/navbar.js';
 import LineChart from './components/charts/LineChart.js'; 
 import { Grid, Container, Paper } from '@mui/material';
-import PieChart from './components/charts/pieChart.js';
+import PieChart from './components/charts/PieChart.js';
 import { BrowserRouter as Router, Route, Routes, Link, BrowserRouter } from 'react-router-dom';
 import Affordability from './pages/Affordability.js';
 import Home from './pages/Home.js';
