@@ -1,15 +1,26 @@
 import ResponsiveAppBar from '../components/navbar/navbar.js';
-import PieChart from '../components/charts/PieChart.js';
+import createChart from '../components/charts/createChart.js';
 import LineChart from '../components/charts/LineChart.js'; 
 import { Grid, Container, Paper } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-
-
+import axios from 'axios'
+import React, { useEffect, useState } from 'react';
 
 
 
 function Affordability() {
+
+    const [chartData, setChartData] = useState(null);
+
+    useEffect(() => {
+        axios.get('http://127.0.0.1:3000/price_prediction/defualt_pie_chart')  // Example API call to FastAPI
+            .then(response => {
+                console.log('Fetched Data:', response.data); // Log data for debugging
+                setChartData(response.data); // Update state with fetched data
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }, []); 
 
     return (
     <div className="App">
@@ -24,9 +35,9 @@ function Affordability() {
       justifyContent="center"
       alignItems="center"
       item xs={6}>
-      <PieChart
-      height="10px"
-      width="50px"/>
+
+        <p> {chartData} </p>
+
     </Grid>
 
     <Grid container

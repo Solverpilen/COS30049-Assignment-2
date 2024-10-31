@@ -5,13 +5,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 // Register necessary Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = () => {
+function createChart(Label, Labels, Data) {
+
   const data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+    labels: Labels,
     datasets: [
       {
-        label: 'Sample Data',
-        data: [12, 19, 3, 5, 2],
+        label: Label,
+        data: Data,
         backgroundColor: [
           'rgba(255, 99, 132, 0.7)',
           'rgba(54, 162, 235, 0.7)',
@@ -49,6 +50,9 @@ const PieChart = () => {
   };
 
   return <Pie data={data} options={options} />;
-};
+  };
 
-export default PieChart;
+
+
+
+export default createChart;

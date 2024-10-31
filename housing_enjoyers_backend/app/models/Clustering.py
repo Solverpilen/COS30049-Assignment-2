@@ -37,7 +37,6 @@ Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
                         "Price": "Int32"
                         })
 
-
 X = Data[['Price', 'Bathroom']].dropna()  
 X_Bedroom = Data[['Price', 'Bedroom']].dropna()
 
