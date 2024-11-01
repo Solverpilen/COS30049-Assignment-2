@@ -4,31 +4,40 @@ from pickle import load
 # Local Files
 from models.ModelInputs import ModelInputs
 from models.Clustering import X_Bedroom, color_map
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 linearRegModel = load(open("LinearRegModel.sav", "rb"))
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"], # URL of React application
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 # HTTP Requests
 
-@app.post("/price_prediction/{price_input}")
-def pricePred(price_input : ModelInputs):
+# @app.post("/price_prediction/{price_input}")
+# def pricePred(price_input : ModelInputs):
 
-    pass
+#     pass
 
-@app.get("/price_prediction/")
-def priceGraph():
-    pass
+# @app.get("/price_prediction/")
+# def priceGraph():
+#     pass
 
-@app.get("/price_prediction/defualt_pie_chart")
+@app.get("/price_prediction/default_pie_chart")
 async def default_pie_chart():
 
-    high: int
-    medium: int
-    low: int
-    very_low: int
+    high = 0
+    medium = 0
+    low = 0
+    very_low = 0
 
     ratings = X_Bedroom['affordability']
 
@@ -45,6 +54,6 @@ async def default_pie_chart():
     ratings = { high, medium, low, very_low}
 
 
-    return {"ratings" : ratings, "Color Map": color_map }
+    return {"ratings" : ratings, "Color Map": color_map.high }
 
 

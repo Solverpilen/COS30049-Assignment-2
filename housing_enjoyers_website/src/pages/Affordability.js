@@ -14,7 +14,7 @@ function Affordability() {
     const [chartData, setChartData] = useState(null);
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:3000/price_prediction/defualt_pie_chart')  // Example API call to FastAPI
+        axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setChartData(response.data); // Update state with fetched data

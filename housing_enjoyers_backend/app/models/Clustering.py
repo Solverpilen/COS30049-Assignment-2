@@ -7,7 +7,7 @@ pd.options.mode.use_inf_as_na = True
 
 #WorkingDirectory = './COS30049-Assignment-2/'
 RawDataDirectory =  'Raw_Datasets/'
-CleanDataDirectory = 'Cleaned_Datasets/'
+CleanDataDirectory = './models/Cleaned_Datasets/'
 
 def affordability_category(price):
     if price <= 100000:
@@ -100,7 +100,7 @@ silhouette_avg_bathroom = silhouette_score(X, all_predictions)
 
 print(f'Silhouette Score for Bathroom vs Price: {silhouette_avg_bathroom}')
 
-silhouette_avg_bedroom = silhouette_score(X_Bedroom, bedroom_predictions)
+#silhouette_avg_bedroom = silhouette_score(X_Bedroom, bedroom_predictions)
 
-print(f'Silhouette Score for Bedroom vs Price: {silhouette_avg_bedroom}')
+#print(f'Silhouette Score for Bedroom vs Price: {silhouette_avg_bedroom}')
 
