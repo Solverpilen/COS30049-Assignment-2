@@ -7,17 +7,19 @@ import Box from '@mui/material/Box';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react';
 
+import Typography from '@mui/material/Typography';
+
 
 
 function Affordability() {
 
-    const [chartData, setChartData] = useState(null);
+    const [chartData, setChartData] = useState({});
 
     useEffect(() => {
         axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
-                setChartData(response.data); // Update state with fetched data
+                setChartData(response.data.ratings); // Update state with fetched data
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []); 
@@ -35,8 +37,10 @@ function Affordability() {
       justifyContent="center"
       alignItems="center"
       item xs={6}>
-
-        <p> {chartData} </p>
+        <div>
+            <Typography> High {chartData.high}  </Typography>
+        </div>
+       
 
     </Grid>
 

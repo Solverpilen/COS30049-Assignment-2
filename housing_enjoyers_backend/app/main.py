@@ -8,8 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-linearRegModel = load(open("LinearRegModel.sav", "rb"))
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"], # URL of React application
@@ -17,6 +15,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+linearRegModel = load(open("LinearRegModel.sav", "rb"))
+
 
 
 
@@ -51,9 +53,6 @@ async def default_pie_chart():
         elif(rating == 'very low'):
             very_low += 1
 
-    ratings = { high, medium, low, very_low}
-
-
-    return {"ratings" : ratings, "Color Map": color_map.high }
+    return { 'ratings': {'high': high, 'medium': medium, 'low': low, 'very low': very_low } }
 
 
