@@ -24,6 +24,10 @@ function Affordability() {
             .catch(error => console.error('Error fetching data:', error));
     }, []); 
 
+    const defaultPieChart = createChart("Default Pie Chart", ["High", "Medium", "Low", "Very Low"], 
+        [chartData.high, chartData.medium, chartData.low, chartData["very low"]], ["blue", "green", "orange", "red"], 
+        ["blue", "green", "orange", "red"]);
+
     return (
     <div className="App">
         <ResponsiveAppBar/>
@@ -38,7 +42,7 @@ function Affordability() {
       alignItems="center"
       item xs={6}>
         <div>
-            <Typography> High {chartData.high}  </Typography>
+            {defaultPieChart}
         </div>
        
 
@@ -50,7 +54,9 @@ function Affordability() {
    // alignItems="center"
     item xs={6}>
 
-    <Box>
+    <Box display="flex" 
+    justifyContent="center"
+    alignItems="center">
     <p> The median weekly income of Australia is $1,500 in 2023. If that person works 50 weeks of the year
         then that comes to a total of $75,000 per year. Assuming monthly expenses of 1,000 per month, 
         this particular person can borrow a maximum of $394,000 to pay for their property. 
