@@ -11,7 +11,7 @@ import {
 } from 'chart.js';
 import {LinearScale } from 'chart.js';
 import { Grid, Paper } from '@mui/material';
-import generateChartConfig from '../../services/chartData.js';
+import generateChartConfig from '../../services/generateChartConfig.js';
 
 // Register the chart elements you want to use
 ChartJS.register(LineElement, PointElement, Title, Tooltip, Legend, CategoryScale, LinearScale);

@@ -70,3 +70,9 @@
   text-align: center;
   vertical-align: center;
 }
+
+.text_box {
+  border: 1px solid lightblue;
+  border-radius: 20px;
+  padding: 20px
+}

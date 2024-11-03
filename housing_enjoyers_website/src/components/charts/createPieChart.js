@@ -5,7 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 // Register necessary Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function createChart(Label, Labels, Data, backGroundColor, Bordercolor) {
+function createPieChart(Label, Labels, Data, backGroundColor, Bordercolor) {
 
   const data = {
     labels: Labels,
@@ -43,4 +43,4 @@ function createChart(Label, Labels, Data, backGroundColor, Bordercolor) {
 
 
 
-export default createChart;
+export default createPieChart;

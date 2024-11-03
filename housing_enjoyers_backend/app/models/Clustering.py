@@ -9,12 +9,12 @@ pd.options.mode.use_inf_as_na = True
 RawDataDirectory =  'Raw_Datasets/'
 CleanDataDirectory = './models/Cleaned_Datasets/'
 
-def affordability_category(price):
-    if price <= 100000:
+def affordability_category(house_price, borrowing_price):
+    if  house_price <= borrowing_price/4:
         return 'high'
-    elif 100001 <= price <= 362400:
+    elif borrowing_price/4 <= house_price <= borrowing_price:
         return 'medium'
-    elif 362401 <= price <= 800000:
+    elif borrowing_price <= house_price <= borrowing_price + 300000:
         return 'low'
     else:
         return 'very low'
@@ -57,11 +57,11 @@ model.fit(X)
 all_predictions = model.predict(X)
 
 model_bedroom = KMeans(n_clusters=4, random_state=42)
-model_bedroom.fit(X_Bedroom)
+# model_bedroom.fit(X_Bedroom)
 
-bedroom_predictions = model_bedroom.predict(X_Bedroom)
+# bedroom_predictions = model_bedroom.predict(X_Bedroom)
 
-X_Bedroom['affordability'] = X_Bedroom['Price'].apply(affordability_category)
+
 
 color_map = {'very low': 'red', 'low': 'orange', 'medium': 'green', 'high': 'blue'}
 
@@ -74,14 +74,14 @@ plt.colorbar(label='Cluster')
 plt.grid(True)
 plt.show()
 
-plt.figure(figsize=(10, 6))
-plt.scatter(X_Bedroom['Price'], X_Bedroom['Bedroom'], c=X_Bedroom['affordability'].map(color_map), s=100, alpha=0.6)
-plt.title('Housing Prices and Bedrooms - Clustered')
-plt.xlabel('Bedrooms')
-plt.ylabel('Price ($)')
-plt.colorbar(label='Cluster')
-plt.grid(True)
-plt.show()
+# plt.figure(figsize=(10, 6))
+# plt.scatter(X_Bedroom['Price'], X_Bedroom['Bedroom'], c=X_Bedroom['affordability'].map(color_map), s=100, alpha=0.6)
+# plt.title('Housing Prices and Bedrooms - Clustered')
+# plt.xlabel('Bedrooms')
+# plt.ylabel('Price ($)')
+# plt.colorbar(label='Cluster')
+# plt.grid(True)
+# plt.show()
 
 #plt.figure(figsize=(12, 6))
 #plt.scatter(X_Bedroom['Price'], X_Bedroom['Bedroom'], c=bedroom_predictions, cmap='viridis')
