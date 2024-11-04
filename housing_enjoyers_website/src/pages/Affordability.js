@@ -2,9 +2,8 @@ import ResponsiveAppBar from '../components/navbar/navbar.js';
 import createPieChart from '../components/charts/createPieChart.js';
 import { 
     Grid2 as Grid, 
-    Container, Paper, TextField, Box, Button, Typography 
+    Container, TextField, Box, Button, Typography 
 } from '@mui/material';
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react';
 
