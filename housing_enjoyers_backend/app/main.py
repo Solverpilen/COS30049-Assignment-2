@@ -44,9 +44,12 @@ def pie_chart_ratings(borrowing_price):
 
 # HTTP Requests
 
-# @app.post("/price_prediction/{price_input}")
-# async def price_prediction(price_input : ModelInputs):
-        
+@app.post("/price_prediction/{price_input}")
+async def price_prediction(price_input : int):
+
+    high, medium, low, very_low = pie_chart_ratings(price_input)
+
+    return { 'ratings': {'high': high, 'medium': medium, 'low': low, 'very low': very_low } }        
 
 #      pass
 

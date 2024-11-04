@@ -1,11 +1,12 @@
 import ResponsiveAppBar from '../components/navbar/navbar.js';
-import createPieChart from '../components/charts/createPieChart.js';
+import createPieChart from '../services/createPieChart.js';
 import { Grid, Container, Paper } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
+import updatePieChart from '../services/updatePieChart.js';
 
 import Typography from '@mui/material/Typography';
 
@@ -14,8 +15,8 @@ import Typography from '@mui/material/Typography';
 function Affordability() {
 
     const [chartData, setChartData] = useState({});
-
-    const [income, setIncome] = useState('');
+    const [borrow, setBorrow] = useState('');
+    const [newData, setNewData] = useState('');
 
     useEffect(() => {
         axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
@@ -27,9 +28,22 @@ function Affordability() {
             
     }, []); 
 
+    function updatePieChart() {
+        axios.post('http://localhost:8000/price_prediction/{borrow}')
+        .then(response => {
+            console.log('Fetched Data:', response.data);
+            setNewData(response.data.ratings);
+        })
+    };
+
+
     const defaultPieChart = createPieChart("Default Pie Chart", ["High", "Medium", "Low", "Very Low"], 
         [chartData.high, chartData.medium, chartData.low, chartData["very low"]], ["blue", "green", "orange", "#FF6666"], 
         ["blue", "green", "orange", "#FF6666"]);
+    
+    
+    
+
 
     return (
     <div className="App">
@@ -45,7 +59,7 @@ function Affordability() {
         
         <Grid container item xs={12} spacing={10} justifyContent="center">
 
-            <Grid xs = {12} md = {6} xs={{display: "flex", justifyContent : "center"}}>
+            <Grid xs = {12} md = {6} xs={{ display: "flex", justifyContent : "center"}}>
             <div>
                 {defaultPieChart}
             </div>
@@ -69,36 +83,28 @@ function Affordability() {
 
                 <Box style={{paddingTop: '50px'}} >
 
-                <TextField id="outlined-basic" label="Maximum borrowing amount ($)" variant="outlined" 
-                onChange={(event) => {
-                setIncome(parseInt(event.target.value));}}/>  
+                <TextField id="outlined-basic" value={borrow} label="Borrowing amount ($)" variant="outlined" 
+                onChange={(e) => {setBorrow(e.target.value)}}/>  
 
                 </Box>
                 <Grid container spacing={10} justifyContent="center" style={{ paddingTop: '50px' }}>
 
                     <Grid item>
-                        <Button variant="outlined">Calculate Affordability</Button>
+                        <Button variant="outlined"onClick={(event) => {
+                        updatePieChart();}}
+                >       Calculate Affordability</Button>
 
                     </Grid>
                     <Grid item>
                         <Button variant="outlined">Return to Default Data</Button>
                     </Grid>
 
-                  
-                    
-
                 </Grid>
-
-                   
 
                 </Box>
 
 
             </Grid>
-
-
-
-        
 
         <Grid display="flex" alignItems="center">
 
