@@ -32,15 +32,16 @@ def pie_chart_ratings(borrowing_price):
     high = medium = low = very_low = 0
     ratings = X_Bedroom['Price'].apply(lambda price: affordability_category(price, borrowing_price))
 
-    for rating in ratings:
-        if rating == 'high':
-            high += 1
-        elif rating == 'medium':
-            medium += 1
-        elif rating == 'low':
-            low += 1
-        elif rating == 'very low':
-            very_low += 1
+    for r in ratings:
+        match r:
+            case 'high':
+                high += 1
+            case 'medium':
+                medium += 1
+            case 'low':
+                low += 1
+            case 'very low':
+                very_low += 1
 
     return high, medium, low, very_low
 
