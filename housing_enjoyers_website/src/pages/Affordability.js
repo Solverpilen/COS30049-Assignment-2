@@ -8,24 +8,55 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react';
 
 
-
-
-
 function Affordability() {
 
     const [chartData, setChartData] = useState({});
     const [borrow, setBorrow] = useState('');
     const [newData, setNewData] = useState('');
+    const [currentChart, setCurrentChart] = useState('');
 
+
+
+
+        
+    
     useEffect(() => {
         axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setChartData(response.data.ratings); // Update state with fetched data
+
+            
+                    
+                const defaultPieChart = createPieChart("Median Affordabaility Options", ["High", "Medium", "Low", "Very Low"], 
+                    [chartData.high, chartData.medium, chartData.low, chartData["very low"]], ["blue", "green", "orange", "#FF6666"], 
+                    ["blue", "green", "orange", "#FF6666"]);
+                
+                
+                     setCurrentChart(defaultPieChart);
+        
             })
             .catch(error => console.error('Error fetching data:', error));
-            
+
+
+   
     }, []); 
+
+    
+
+    useEffect(() => {
+
+        const personalisedPieChart = createPieChart("Personal Affordability Options", 
+            ["High", "Medium", "Low", "Very Low"], 
+            [chartData.high, chartData.medium, chartData.low, chartData["very low"]], 
+            ["blue", "green", "orange", "#FF6666"], 
+            ["blue", "green", "orange", "#FF6666"]);
+        setCurrentChart(personalisedPieChart); // Set the chart to the personalised one
+        
+    }, [chartData]);
+
+
+
 
     function updatePieChart(borrowingInput) {
 
@@ -34,24 +65,19 @@ function Affordability() {
         axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
         .then(response => {
             console.log('Fetched Data:', response.data);
-            setNewData(response.data.ratings);
+            setChartData(response.data.ratings);
+
+
         })
+ 
     };
 
-
-    const defaultPieChart = createPieChart("Default Pie Chart", ["High", "Medium", "Low", "Very Low"], 
-        [chartData.high, chartData.medium, chartData.low, chartData["very low"]], ["blue", "green", "orange", "#FF6666"], 
-        ["blue", "green", "orange", "#FF6666"]);
-    
-    
-    
 
 
     return (
     <div className="App">
         <ResponsiveAppBar/>
 
-  
         <h1>React Line Chart with Chart.js</h1>
         <Container maxWidth="lg" style={{ marginTop: '200px'}} xs={{ display: 'flex' }}>
         {/* Grid Container to center the charts */}
@@ -61,7 +87,7 @@ function Affordability() {
         <Grid container columns={2} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
         <Grid size={1}>
-            <div>{defaultPieChart}</div>
+            <div>{currentChart}</div>
         </Grid>
 
         <Grid container size={1} direction="column">
@@ -86,9 +112,6 @@ function Affordability() {
             <Grid container spacing={10} columns={2} style={{ paddingTop: '50px' }}>
                 <Grid size={1}>
                     <Button variant="outlined" onClick={() => updatePieChart(borrow)}>Calculate Affordability</Button>
-                </Grid>
-                <Grid size={1}>
-                    <Button variant="outlined" onClick={() => updatePieChart(chartData)}>Return to Default Data</Button>
                 </Grid>
             </Grid>
         </Grid>
