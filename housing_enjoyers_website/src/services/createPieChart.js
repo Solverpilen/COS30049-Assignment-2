@@ -37,7 +37,7 @@ function createPieChart(Label, Labels, Data, backGroundColor, Bordercolor) {
     },
   };
 
-  return <Pie data={data} options={options} />;
+  return <Pie data= {data} options = {options}/>;
   };
 
 
