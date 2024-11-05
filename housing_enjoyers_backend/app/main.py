@@ -1,12 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from datetime import datetime, timedelta
 from pickle import load
 import os
 import pandas as pd
 
-from models.ModelInputs import ModelInputs
+from models.ModelInputs import ModelInputs, PricePredictionRequest
 from models.Clustering import X_Bedroom, color_map, affordability_category
 
 
@@ -46,10 +45,6 @@ def pie_chart_ratings(borrowing_price):
     return high, medium, low, very_low
 
 
-class PricePredictionRequest(BaseModel):
-    price_input: int
-
-
 
 
 @app.post("/price_prediction/")
@@ -70,19 +65,17 @@ async def default_pie_chart():
 
 def get_filtered_data(file_path, target_date_str):
     try:
-        
         target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
         
-        
         df = pd.read_csv(file_path, parse_dates=['Date'])
-        
         
         start_date = target_date - timedelta(days=7)
         end_date = target_date + timedelta(days=7)
         
-        
         filtered_df = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
+        
         return filtered_df.to_dict(orient='records')
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing data: {e}")
 
