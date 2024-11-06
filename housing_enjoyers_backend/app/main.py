@@ -7,7 +7,7 @@ import os
 import pandas as pd
 
 from models.ModelInputs import ModelInputs
-from models.Clustering import X_Bedroom, color_map, affordability_category
+from models.Clustering import X_Bedroom, affordability_category
 
 
 app = FastAPI()
@@ -52,11 +52,11 @@ class PricePredictionRequest(BaseModel):
 
 
 
-@app.post("/price_prediction/")
-async def price_prediction(req: PricePredictionRequest):
+@app.post("/price_prediction/{req}")
+async def price_prediction(req: int):
     try:
-        high, medium, low, very_low = pie_chart_ratings(req.price_input)
-        return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very_low': very_low}}
+        high, medium, low, very_low = pie_chart_ratings(req)
+        return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very low': very_low}}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -65,7 +65,7 @@ async def price_prediction(req: PricePredictionRequest):
 async def default_pie_chart():
     borrowing_price = 394300  
     high, medium, low, very_low = pie_chart_ratings(borrowing_price)
-    return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very_low': very_low}}
+    return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very low': very_low}}
 
 
 def get_filtered_data(file_path, target_date_str):

@@ -6,20 +6,16 @@ import {
 } from '@mui/material';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react';
+import BedBathAffordability from '../components/BedBathAffordability.js'
 
 
 function Affordability() {
 
     const [chartData, setChartData] = useState({});
     const [borrow, setBorrow] = useState('');
-    const [newData, setNewData] = useState('');
     const [currentChart, setCurrentChart] = useState('');
 
-
-
-
-        
-    
+    // useeffect runs the code below on first render to get the default pie chart
     useEffect(() => {
         axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
             .then(response => {
@@ -32,7 +28,7 @@ function Affordability() {
                     [chartData.high, chartData.medium, chartData.low, chartData["very low"]], ["blue", "green", "orange", "#FF6666"], 
                     ["blue", "green", "orange", "#FF6666"]);
                 
-                
+                //sets the pie chart to the current chart
                      setCurrentChart(defaultPieChart);
         
             })
@@ -43,7 +39,8 @@ function Affordability() {
     }, []); 
 
     
-
+    // use effect takes place once the chartData changes, creating a new pie chart and setting it to
+    // the current pie chart
     useEffect(() => {
 
         const personalisedPieChart = createPieChart("Personal Affordability Options", 
@@ -57,7 +54,7 @@ function Affordability() {
 
 
 
-
+    // does a post request based on the argument borrowingInput. invokes the backend function to then return data
     function updatePieChart(borrowingInput) {
 
         const borrowInput = borrowingInput;
@@ -65,6 +62,8 @@ function Affordability() {
         axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
         .then(response => {
             console.log('Fetched Data:', response.data);
+
+            // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
             setChartData(response.data.ratings);
 
 
@@ -121,9 +120,15 @@ function Affordability() {
     
        
         </Container>
+
+        <BedBathAffordability/>
+   
    
 
     </div>
+
+    
+      
 
     );
 
