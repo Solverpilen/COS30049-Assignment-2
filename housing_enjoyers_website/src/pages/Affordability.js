@@ -60,6 +60,11 @@ function Affordability() {
 
     function updatePieChart(borrowingInput) {
 
+        if (borrowingInput == NaN)
+        {
+            return <div>You can only input a whole number without seperators. e.g. 450000</div>;
+        }
+
         const borrowInput = borrowingInput;
 
         axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
@@ -110,7 +115,7 @@ function Affordability() {
                 />
             </Box>
             <Grid container spacing={10} columns={2} style={{ paddingTop: '50px' }}>
-                <Grid size={1}>
+                <Grid size={2}>
                     <Button variant="outlined" onClick={() => updatePieChart(borrow)}>Calculate Affordability</Button>
                 </Grid>
             </Grid>

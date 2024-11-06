@@ -12,7 +12,7 @@ from models.Clustering import X_Bedroom, color_map, affordability_category
 app = FastAPI()
 
 
-origins = ["http://localhost:3000"]  
+origins = ["http://localhost:3000"]
 
 
 app.add_middleware(
@@ -25,6 +25,7 @@ app.add_middleware(
 
 
 linearRegModel = load(open("LinearRegModel.sav", "rb"))
+clusteringModel = load(open("ClusterModel.sav", "rb"))
 
 
 def pie_chart_ratings(borrowing_price):
