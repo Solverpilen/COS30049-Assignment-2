@@ -17,7 +17,7 @@ origins = ["http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -95,7 +95,7 @@ async def default_bar_chart():
     
     for i in range (1, 5):
 
-        bathroom = X.loc[X['Bathroom'] == i]
+        bathroom = data.loc[data['Bathroom'] == i]
 
         high, medium, low, very_low = affordability_chart_ratings(borrowing_price, bathroom)
 
