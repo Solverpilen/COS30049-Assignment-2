@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timedelta
@@ -9,15 +10,14 @@ from models.Clustering import X_Bedroom, Data, affordability_category, X as data
 
 
 
+
 app = FastAPI()
-
-
-origins = ["http://localhost:3000"]  
-
 
 app.add_middleware(
     CORSMiddleware,
+
     allow_origins=["*"],
+
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,21 +27,23 @@ app.add_middleware(
 linearRegModel = load(open("LinearRegModel.sav", "rb"))
 
 
+
 def affordability_chart_ratings(borrowing_price, data):
     high = medium = low = very_low = 0
     ratings = data['Price'].apply(lambda price: affordability_category(price, borrowing_price))
 
-    for r in ratings:
-        match r:
-            case 'high':
-                high += 1
-            case 'medium':
-                medium += 1
-            case 'low':
-                low += 1
-            case 'very low':
-                very_low += 1
 
+    for rating in ratings:
+        if(rating == 'high'):
+            high += 1
+        elif(rating == 'medium'):
+            medium += 1
+        elif(rating == 'low'):
+            low += 1
+        elif(rating == 'very low'):
+            very_low += 1
+
+            
     return high, medium, low, very_low
 
 
@@ -54,8 +56,13 @@ async def price_prediction(req: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# @app.get("/price_prediction/")
+# def priceGraph():
+#     pass
+
 @app.get("/price_prediction/default_pie_chart")
 async def default_pie_chart():
+
     borrowing_price = 394300  
     high, medium, low, very_low = affordability_chart_ratings(borrowing_price, Data)
     return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very low': very_low}}
@@ -105,16 +112,6 @@ async def default_bar_chart():
     return total_ratings
 
 
-        
-
-
-
-
-
-
-
-
-
 
 @app.get("/housing_data/{target_date}")
 async def get_housing_data(target_date: str):
@@ -123,3 +120,4 @@ async def get_housing_data(target_date: str):
         return {"status": "success", "data": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
