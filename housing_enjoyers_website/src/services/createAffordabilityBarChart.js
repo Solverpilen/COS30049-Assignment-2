@@ -62,7 +62,7 @@ function createAffordabilityBarChart(Labels, highData, mediumData, lowData, very
     },
   };
 
-  return <Bar data= {data} options/>;
+  return <Bar data= {data} options width={500} height={250}/>;
 };
 
 export default createAffordabilityBarChart;

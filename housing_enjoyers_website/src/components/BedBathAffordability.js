@@ -17,14 +17,15 @@ function BedBathAffordability() {
     <div>
 
         <Container maxWidth="lg" style={{ marginTop: '100px'}}>
-            <Grid container spacing={2} alignItems="center" justifyContent="center">
-                <Grid item xs={12} md={6} style={{ display: 'flex', justifyContent: 'center' }}>
-                    <div>{bathroomBarChart}</div>
-                </Grid>
+            <Grid container spacing={2} alignItems="center" justifyContent="center" display="flex" flexDirection="row" >
+                    <div>
+                        
+                        {bathroomBarChart}
+                        <h3> Number of Bathrooms</h3>
+                    </div>
 
-                <Grid item xs={12} md={6} style={{ display: 'flex', justifyContent: 'center' }}>
                     <div>{anotherchart}</div>
-                </Grid>
+
             </Grid>
         </Container>
 
