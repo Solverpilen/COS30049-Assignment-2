@@ -18,20 +18,17 @@ function Affordability() {
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
+        axios.get('http://localhost:8000/price_prediction/default_pie_chart')
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setPieChartData(response.data.ratings); // Update state with fetched data
 
-            
-                    
                 const defaultPieChart = createPieChart("Median Affordabaility Options", ["High", "Medium", "Low", "Very Low"], 
-                    [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData["very low"]], ["blue", "green", "orange", "#FF6666"], 
+                    [parseInt(pieChartData[0]), parseInt(pieChartData[1]), parseInt(pieChartData[2]), parseInt(pieChartData[3])], ["blue", "green", "orange", "#FF6666"], 
                     ["blue", "green", "orange", "#FF6666"]);
                 
                 //sets the pie chart to the current chart
-                     setCurrentPieChart(defaultPieChart);
-        
+                setCurrentPieChart(defaultPieChart);
             })
             .catch(error => console.error('Error fetching data:', error));
 
@@ -39,7 +36,6 @@ function Affordability() {
             .then(response => {
                 console.log('Fetched bedroom, bathroom data', response.data);
                 setBarChartData(response.data.total_ratings);
-
             });
 
 
@@ -53,7 +49,7 @@ function Affordability() {
 
         const personalisedPieChart = createPieChart("Personal Affordability Options", 
             ["High", "Medium", "Low", "Very Low"], 
-            [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData["very low"]], 
+            [pieChartData[0], pieChartData[1], pieChartData[2], pieChartData[3]], 
             ["blue", "green", "orange", "#FF6666"], 
             ["blue", "green", "orange", "#FF6666"]);
         setCurrentPieChart(personalisedPieChart); // Set the chart to the personalised one
@@ -65,7 +61,7 @@ function Affordability() {
     // does a post request based on the argument borrowingInput. invokes the backend function to then return data
     function updatePieChart(borrowingInput) {
 
-        if (borrowingInput == NaN)
+        if (isNaN(borrowingInput))
         {
             return <div>You can only input a whole number without seperators. e.g. 450000</div>;
         }
