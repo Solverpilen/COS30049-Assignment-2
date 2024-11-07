@@ -22,13 +22,6 @@ function Affordability() {
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setPieChartData(response.data.ratings); // Update state with fetched data
-
-                const defaultPieChart = createPieChart("Median Affordabaility Options", ["High", "Medium", "Low", "Very Low"], 
-                    [parseInt(pieChartData[0]), parseInt(pieChartData[1]), parseInt(pieChartData[2]), parseInt(pieChartData[3])], ["blue", "green", "orange", "#FF6666"], 
-                    ["blue", "green", "orange", "#FF6666"]);
-                
-                //sets the pie chart to the current chart
-                setCurrentPieChart(defaultPieChart);
             })
             .catch(error => console.error('Error fetching data:', error));
 
@@ -56,6 +49,17 @@ function Affordability() {
         
     }, [pieChartData]);
 
+    // useEffect(() => {
+
+    //     const personalisedBarChart = createBarChart("Personal Affordability Options", 
+    //         ["High", "Medium", "Low", "Very Low"], 
+    //         [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData["very low"]], 
+    //         ["blue", "green", "orange", "#FF6666"], 
+    //         ["blue", "green", "orange", "#FF6666"]);
+    //     setCurrentPieChart(personalisedPieChart); // Set the chart to the personalised one
+        
+    // }, [barChartData]);
+
 
 
     // does a post request based on the argument borrowingInput. invokes the backend function to then return data
@@ -73,7 +77,12 @@ function Affordability() {
             console.log('Fetched Data:', response.data);
 
             // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
-            setCurrentPieChart(response.data.ratings);
+
+            setPieChartData(response.data.ratings);
+
+        
+
+
 
 
         })
