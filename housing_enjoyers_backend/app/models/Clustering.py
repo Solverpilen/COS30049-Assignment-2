@@ -22,3 +22,13 @@ Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
 
 X = Data[['Price', 'Bathroom']].dropna()  
 X_Bedroom = Data[['Price', 'Bedroom']].dropna()
+
+def affordability_category(house_price, borrowing_price):
+    if  house_price <= borrowing_price/4:
+        return 'high'
+    elif borrowing_price/4 <= house_price <= borrowing_price:
+        return 'medium'
+    elif borrowing_price <= house_price <= borrowing_price + 300000:
+        return 'low'
+    else:
+        return 'very low'

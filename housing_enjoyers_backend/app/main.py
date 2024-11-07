@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
 # Local Files
-from models.Clustering import X_Bedroom, affordability_category, Data, X
+from models.Clustering import X_Bedroom, Data, X, affordability_category
 from models.ModelInputs import ModelInputs, PricePredictionRequest
 from utils.ClusteringFunctions import affordability_chart_ratings_old, affordability_chart_ratings_new
 
