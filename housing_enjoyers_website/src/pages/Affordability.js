@@ -6,58 +6,63 @@ import {
 } from '@mui/material';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react';
+import BedBathAffordability from '../components/BedBathAffordability.js'
 
 
 function Affordability() {
 
-    const [chartData, setChartData] = useState({});
+    const [pieChartData, setPieChartData] = useState({});
     const [borrow, setBorrow] = useState('');
-    const [newData, setNewData] = useState('');
-    const [currentChart, setCurrentChart] = useState('');
+    const [currentPieChart, setCurrentPieChart] = useState('');
+    const [barChartData, setBarChartData] = useState('');
 
-
-
-
-        
-    
+    // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
         axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
-                setChartData(response.data.ratings); // Update state with fetched data
+                setPieChartData(response.data.ratings); // Update state with fetched data
 
             
                     
                 const defaultPieChart = createPieChart("Median Affordabaility Options", ["High", "Medium", "Low", "Very Low"], 
-                    [chartData.high, chartData.medium, chartData.low, chartData["very low"]], ["blue", "green", "orange", "#FF6666"], 
+                    [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData["very low"]], ["blue", "green", "orange", "#FF6666"], 
                     ["blue", "green", "orange", "#FF6666"]);
                 
-                
-                     setCurrentChart(defaultPieChart);
+                //sets the pie chart to the current chart
+                     setCurrentPieChart(defaultPieChart);
         
             })
             .catch(error => console.error('Error fetching data:', error));
+
+        axios.get('http://localhost:8000/price_prediction/default_bar_chart')
+            .then(response => {
+                console.log('Fetched bedroom, bathroom data', response.data);
+                setBarChartData(response.data.total_ratings);
+
+            });
 
 
    
     }, []); 
 
     
-
+    // use effect takes place once the chartData changes, creating a new pie chart and setting it to
+    // the current pie chart
     useEffect(() => {
 
         const personalisedPieChart = createPieChart("Personal Affordability Options", 
             ["High", "Medium", "Low", "Very Low"], 
-            [chartData.high, chartData.medium, chartData.low, chartData["very low"]], 
+            [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData["very low"]], 
             ["blue", "green", "orange", "#FF6666"], 
             ["blue", "green", "orange", "#FF6666"]);
-        setCurrentChart(personalisedPieChart); // Set the chart to the personalised one
+        setCurrentPieChart(personalisedPieChart); // Set the chart to the personalised one
         
-    }, [chartData]);
+    }, [pieChartData]);
 
 
 
-
+    // does a post request based on the argument borrowingInput. invokes the backend function to then return data
     function updatePieChart(borrowingInput) {
 
         if (borrowingInput == NaN)
@@ -70,7 +75,9 @@ function Affordability() {
         axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
         .then(response => {
             console.log('Fetched Data:', response.data);
-            setChartData(response.data.ratings);
+
+            // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
+            setCurrentPieChart(response.data.ratings);
 
 
         })
@@ -92,7 +99,7 @@ function Affordability() {
         <Grid container columns={2} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
         <Grid size={1}>
-            <div>{currentChart}</div>
+            <div>{currentPieChart}</div>
         </Grid>
 
         <Grid container size={1} direction="column">
@@ -126,9 +133,15 @@ function Affordability() {
     
        
         </Container>
+
+        <BedBathAffordability/>
+   
    
 
     </div>
+
+    
+      
 
     );
 

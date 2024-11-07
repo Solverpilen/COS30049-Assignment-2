@@ -17,6 +17,8 @@ function createPieChart(Label, Labels, Data, backGroundColor, Bordercolor) {
         borderColor:Bordercolor,
         borderWidth: 1,
       },
+
+      
     ],
   };
 
