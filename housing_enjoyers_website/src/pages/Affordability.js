@@ -1,4 +1,4 @@
-import ResponsiveAppBar from '../components/navbar/navbar.js';
+import ResponsiveAppBar from '../components/navbar.js';
 import createPieChart from '../services/createPieChart.js';
 import { 
     Grid2 as Grid, 
@@ -15,14 +15,14 @@ function Affordability() {
     const [borrow, setBorrow] = useState('');
     const [currentPieChart, setCurrentPieChart] = useState('');
     const [barChartData, setBarChartData] = useState('');
+    const [lineChartData, setLineChartData] = useState('');
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/price_prediction/default_pie_chart')  // Example API call to FastAPI
+        axios.get('http://localhost:8000/price_prediction/default_pie_chart')
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setPieChartData(response.data.ratings); // Update state with fetched data
-        
             })
             .catch(error => console.error('Error fetching data:', error));
 
@@ -30,7 +30,6 @@ function Affordability() {
             .then(response => {
                 console.log('Fetched bedroom, bathroom data', response.data);
                 setBarChartData(response.data.total_ratings);
-
             });
 
 
@@ -44,7 +43,7 @@ function Affordability() {
 
         const personalisedPieChart = createPieChart("Personal Affordability Options", 
             ["High", "Medium", "Low", "Very Low"], 
-            [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData["very low"]], 
+            [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData.very_low], 
             ["blue", "green", "orange", "#FF6666"], 
             ["blue", "green", "orange", "#FF6666"]);
         setCurrentPieChart(personalisedPieChart); // Set the chart to the personalised one
@@ -55,7 +54,7 @@ function Affordability() {
 
     //     const personalisedBarChart = createBarChart("Personal Affordability Options", 
     //         ["High", "Medium", "Low", "Very Low"], 
-    //         [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData["very low"]], 
+    //         [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData.very_low], 
     //         ["blue", "green", "orange", "#FF6666"], 
     //         ["blue", "green", "orange", "#FF6666"]);
     //     setCurrentPieChart(personalisedPieChart); // Set the chart to the personalised one
@@ -67,6 +66,11 @@ function Affordability() {
     // does a post request based on the argument borrowingInput. invokes the backend function to then return data
     function updatePieChart(borrowingInput) {
 
+        if (isNaN(borrowingInput))
+        {
+            return <div>You can only input a whole number without seperators. e.g. 450000</div>;
+        }
+
         const borrowInput = borrowingInput;
 
         axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
@@ -76,14 +80,7 @@ function Affordability() {
             // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
 
             setPieChartData(response.data.ratings);
-
-        
-
-
-
-
         })
- 
     };
 
 
@@ -124,7 +121,7 @@ function Affordability() {
                 />
             </Box>
             <Grid container spacing={10} columns={2} style={{ paddingTop: '50px' }}>
-                <Grid size={1}>
+                <Grid size={2}>
                     <Button variant="outlined" onClick={() => updatePieChart(borrow)}>Calculate Affordability</Button>
                 </Grid>
             </Grid>

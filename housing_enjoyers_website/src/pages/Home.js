@@ -1,4 +1,4 @@
-import ResponsiveAppBar from '../components/navbar/navbar.js';
+import ResponsiveAppBar from '../components/navbar.js';
 
 
 function Home() {

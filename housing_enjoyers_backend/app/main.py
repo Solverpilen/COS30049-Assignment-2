@@ -1,116 +1,89 @@
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from datetime import datetime, timedelta
 from pickle import load
+from model import LinearRegressionModel, KMeansModel
 import pandas as pd
-
-from models.ModelInputs import ModelInputs
-from models.Clustering import X_Bedroom, Data, affordability_category, X as data
-
-
 
 
 app = FastAPI()
 
+
+origins = ["http://localhost:3000"]  
+
+
 app.add_middleware(
     CORSMiddleware,
-
     allow_origins=["*"],
-
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-linearRegModel = load(open("LinearRegModel.sav", "rb"))
+linear_model = LinearRegressionModel()
+kmeans_model = KMeansModel()
 
 
 
-def affordability_chart_ratings(borrowing_price, data):
+'''
+def pie_chart_ratings(borrowing_price):
     high = medium = low = very_low = 0
-    ratings = data['Price'].apply(lambda price: affordability_category(price, borrowing_price))
-
+    ratings = X_Bedroom['Price'].apply(lambda price: affordability_category(price, borrowing_price))
 
     for rating in ratings:
-        if(rating == 'high'):
+        if rating == 'high':
             high += 1
-        elif(rating == 'medium'):
+        elif rating == 'medium':
             medium += 1
-        elif(rating == 'low'):
+        elif rating == 'low':
             low += 1
-        elif(rating == 'very low'):
+        elif rating == 'very low':
             very_low += 1
 
-            
     return high, medium, low, very_low
 
 
-@app.post("/price_prediction/{req}")
-async def price_prediction(req: int):
+class PricePredictionRequest(BaseModel):
+    price_input: int
+
+
+
+
+@app.post("/price_prediction/")
+async def price_prediction(req: PricePredictionRequest):
     try:
-        high, medium, low, very_low = affordability_chart_ratings(req, data)
-        return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very low': very_low}}
+        high, medium, low, very_low = pie_chart_ratings(req.price_input)
+        return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very_low': very_low}}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# @app.get("/price_prediction/")
-# def priceGraph():
-#     pass
-
 @app.get("/price_prediction/default_pie_chart")
 async def default_pie_chart():
-
     borrowing_price = 394300  
-    high, medium, low, very_low = affordability_chart_ratings(borrowing_price, Data)
-    return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very low': very_low}}
+    high, medium, low, very_low = pie_chart_ratings(borrowing_price)
+    return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very_low': very_low}}
 
 
 def get_filtered_data(file_path, target_date_str):
     try:
+        
         target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
         
+        
         df = pd.read_csv(file_path, parse_dates=['Date'])
+        
         
         start_date = target_date - timedelta(days=7)
         end_date = target_date + timedelta(days=7)
         
-        filtered_df = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
         
+        filtered_df = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
         return filtered_df.to_dict(orient='records')
-    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing data: {e}")
-
-@app.get("/price_prediction/default_bar_chart")
-
-async def default_bar_chart():
-
-    borrowing_price = 394300  
-    total_ratings = {}
-
-    for i in range(1, 5):
-
-        bedroom = X_Bedroom.loc[X_Bedroom['Bedroom'] == i]
-
-        high, medium, low, very_low = affordability_chart_ratings(borrowing_price, bedroom)
-
-        total_ratings[str(i) + "_bedroom_ratings"] = {"high": high, "medium" : medium, "low" : low, "very low": very_low}
-
-    
-    for i in range (1, 5):
-
-        bathroom = data.loc[data['Bathroom'] == i]
-
-        high, medium, low, very_low = affordability_chart_ratings(borrowing_price, bathroom)
-
-        total_ratings[str(i) + "_bathroom_ratings"] = {"high": high, "medium" : medium, "low" : low, "very low": very_low}
-
-    
-    return total_ratings
-
 
 
 @app.get("/housing_data/{target_date}")
@@ -120,4 +93,27 @@ async def get_housing_data(target_date: str):
         return {"status": "success", "data": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+'''
 
+# Pass trained data from linear model backend to frontend 
+@app.get("model.py") # change url here 
+async def lineardata():
+    try:
+        price_prediction = linear_model.predict()
+        return {"data": price_prediction}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+# Pass trained data from clustering model backend to frontend 
+@app.get("model.py") # change url here 
+async def clusterdata():
+    try:
+        cluster_prediction = kmeans_model.predict()
+        return {"data": cluster_prediction}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Initiate Backend Server (
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

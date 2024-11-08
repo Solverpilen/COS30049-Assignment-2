@@ -1,18 +1,24 @@
 import React from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
-// Register necessary Chart.js components
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register();
 
-function createPieChart(Label, Labels, Data, backGroundColor, Bordercolor) {
+function createLineChart(Label, Labels, Data, backGroundColor, Bordercolor) {
 
-	const data = {
+    const config = {
+        type: 'line',
+        data: data,
+    };
+
+    const data = {
 		labels: Labels,
 		datasets: [
 		{
 			label: Label,
 			data: Data,
+            fill: false,
+            tension: 0,
 			backgroundColor: backGroundColor,
 			borderColor:Bordercolor,
 			borderWidth: 1,
@@ -39,10 +45,7 @@ function createPieChart(Label, Labels, Data, backGroundColor, Bordercolor) {
 		},
 	};
 
-	return <Pie data= {data} options = {options}/>;
-	};
+	return <Line data={data} options={options}/>;
+};
 
-
-
-
-export default createPieChart;
+export default createLineChart;
