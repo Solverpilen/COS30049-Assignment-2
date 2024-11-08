@@ -7,20 +7,22 @@ import Prediction from './pages/Prediction.js';
 import Home from './pages/Home.js';
 
 
-function App() {
+function App({ children }) {
 
-  return (
+	return (
+		<div>
+			<BrowserRouter>
 
-<BrowserRouter>
+				<Routes>
+				<Route path='/' element={<Home/>} />
+				<Route path='/Affordability' element={<Affordability/>} />
+				<Route path='/Prediction' element={<Prediction/>} />
 
-    <Routes>
-      <Route path='/' element={<Home/>} />
-      <Route path='/Affordability' element={<Affordability/>} />
-      <Route path='/Prediction' element={<Prediction/>} />
+				</Routes>
 
-    </Routes>
-
-</BrowserRouter>
+			</BrowserRouter>
+		</div>
+  	);
   // <div className="App">
   //   <ResponsiveAppBar/>
   //   <div>
@@ -56,7 +58,6 @@ function App() {
 
   // </div>
   // );
-  );
 
 }
 

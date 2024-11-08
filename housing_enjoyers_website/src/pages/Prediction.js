@@ -3,42 +3,29 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { 
     Grid2 as Grid, 
-    Container, TextField, Box, Button, Typography 
+    Container, Box, Button, Typography 
 } from '@mui/material';
-import DatePicker from '@mui/x-date-pickers/DatePicker'
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 // Local Files
 import ResponsiveAppBar from '../components/navbar';
-import BedBathAffordability from '../components/BedBathAffordability';
-import createPieChart from '../services/createPieChart';
 import createLineChart from '../services/createLineChart';
 
 
 function Prediction() {
-
-    const [pieChartData, setPieChartData] = useState({});
-    const [borrow, setBorrow] = useState('');
-    const [currentPieChart, setCurrentPieChart] = useState('');
-    const [barChartData, setBarChartData] = useState('');
+    const [date, setDate] = useState('');
     const [lineChartData, setLineChartData] = useState('');
     const [currentLineChart, setCurrentLineChart] = useState('');
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/price_prediction/default_pie_chart')
+        axios.get('http://localhost:8000/model.py')
             .then(response => {
-                console.log('Fetched Data:', response.data); // Log data for debugging
-                setPieChartData(response.data.ratings); // Update state with fetched data
+                console.log('Fetched Year and prediction data', response.data);
+                setLineChartData(response.data.price_prediction);
             })
             .catch(error => console.error('Error fetching data:', error));
-
-        axios.get('http://localhost:8000/price_prediction/default_bar_chart')
-            .then(response => {
-                console.log('Fetched bedroom, bathroom data', response.data);
-                setBarChartData(response.data.total_ratings);
-            });
-
-
-   
     }, []); 
 
     
@@ -46,45 +33,33 @@ function Prediction() {
     // the current pie chart
     useEffect(() => {
 
-        const personalisedPieChart = createPieChart("Personal Affordability Options", 
-            ["High", "Medium", "Low", "Very Low"], 
-            [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData.very_low], 
+        const personalisedLineChart = createLineChart("Predicted House Pricing", 
+            lineChartData.x, 
+            lineChartData.y, 
             ["blue", "green", "orange", "#FF6666"], 
             ["blue", "green", "orange", "#FF6666"]);
-        setCurrentPieChart(personalisedPieChart); // Set the chart to the personalised one
+        setCurrentLineChart(personalisedLineChart); // Set the chart to the personalised one
         
-    }, [pieChartData]);
-
-    // useEffect(() => {
-
-    //     const personalisedBarChart = createBarChart("Personal Affordability Options", 
-    //         ["High", "Medium", "Low", "Very Low"], 
-    //         [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData.very_low], 
-    //         ["blue", "green", "orange", "#FF6666"], 
-    //         ["blue", "green", "orange", "#FF6666"]);
-    //     setCurrentPieChart(personalisedPieChart); // Set the chart to the personalised one
-        
-    // }, [barChartData]);
+    }, [lineChartData]);
 
 
+    // does a post request based on the argument borrowingInput. invokes the backend function to then return data    
+    function updateLineChart(DateInput) {
 
-    // does a post request based on the argument borrowingInput. invokes the backend function to then return data
-    function updatePieChart(borrowingInput) {
-
-        if (isNaN(borrowingInput))
+        if (isNaN(DateInput))
         {
-            return <div>You can only input a whole number without seperators. e.g. 450000</div>;
+            return <div>You can only input a year and month.</div>;
         }
 
-        const borrowInput = borrowingInput;
+        const Date = DateInput;
 
-        axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
+        axios.post(`http://localhost:8000/price_prediction/${Date}`)
         .then(response => {
             console.log('Fetched Data:', response.data);
 
             // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
 
-            setPieChartData(response.data.ratings);
+            setLineChartData(response.data.ratings);
         })
     };
 
@@ -116,15 +91,18 @@ function Prediction() {
                                 When are you looking to buy a house? Use the date pickers below!
                             </Typography>
 
-                            <Box style={{padding: '2em 4em 0em'}} >
-                                <TextField type="number" id="outlined-basic" label="Maximum borrowing amount ($)" variant="outlined" placeholder="75000" fullWidth
-                                    onChange={ (event) => { setBorrow(parseInt(event.target.value)); } }
-                                />
-                                <DatePicker label={'Year'} views={['year']} />
+                            <Box style={{padding: '2em 4em 0em'}}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DateCalendar 
+                                        views={['month', 'year']}
+                                        openTo="year"
+                                        onChange={ (event) => { setDate(parseInt(event.target.value)); } }
+                                    />
+                                </LocalizationProvider>
                             </Box>
                             <Grid container spacing={10} columns={2} style={{ paddingTop: '20px' }}>
                                 <Grid size={2}>
-                                    <Button variant="outlined" onClick={() => updatePieChart(borrow)}>Calculate Affordability</Button>
+                                    <Button variant="outlined" onClick={() => updateLineChart(date)}>Predict Prices</Button>
                                 </Grid>
                             </Grid>
                         </Grid>
