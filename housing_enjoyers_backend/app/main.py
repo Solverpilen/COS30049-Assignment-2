@@ -105,7 +105,7 @@ async def lineardata():
         raise HTTPException(status_code=500, detail=str(e))
     
 # Pass trained data from clustering model backend to frontend 
-@app.get("/models/ClusterModel.sav") # change url here 
+@app.get("/models/ClusterModel") # change url here 
 async def clusterdata():
     try:
         cluster_prediction = kmeans_model.predict()

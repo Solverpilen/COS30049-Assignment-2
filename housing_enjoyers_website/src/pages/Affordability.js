@@ -19,7 +19,7 @@ function Affordability() {
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/ClusterModel.sav')
+        axios.get('http://localhost:8000/models/ClusterModel')
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setPieChartData(response.data.ratings); // Update state with fetched data

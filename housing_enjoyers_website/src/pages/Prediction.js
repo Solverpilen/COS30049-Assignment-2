@@ -1,7 +1,7 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import dayjs from 'dayjs';
+import dayjs, { isDayjs, startOf } from 'dayjs'; // This is the date library I chose, it has a small file size
 import { 
     Grid2 as Grid, 
     Container, Box, Button, Typography 
@@ -15,16 +15,17 @@ import createLineChart from '../services/createLineChart';
 
 
 function Prediction() {
-    const [date, setDate] = useState('');
-    const [lineChartData, setLineChartData] = useState('');
-    const [currentLineChart, setCurrentLineChart] = useState('');
-    const [predictionData, setPredictionData] = useState('');
+    const [date, setDate] = useState(''); // The date value from the date picker (should only be a year value)
+    const [lineChartData, setLineChartData] = useState(''); // The data passed into createLineChart so that the line chart can be rendered
+    const [currentLineChart, setCurrentLineChart] = useState(''); // The actual chart that gets displayed
+    const [predictionData, setPredictionData] = useState(''); // the raw data from the server which gets filtered by the date (not sure if best method)
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/models/LinearRegModel')
+        axios.get('http://localhost:8000/models/LinearRegModel') // This may need to change when Bryan makes backend fixes
             .then(response => {
                 console.log('Fetched Year and prediction data', response.data);
+                // these 2 should initially be the same to show all data
                 setPredictionData(response.data.price_prediction);
                 setLineChartData(predictionData);
             })
@@ -37,7 +38,7 @@ function Prediction() {
     useEffect(() => {
 
         const personalisedLineChart = createLineChart("Predicted House Pricing", 
-            lineChartData.x, lineChartData.y, 
+            lineChartData.x, lineChartData.y, // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better
             ["blue", "green", "orange", "#FF6666"], 
             ["blue", "green", "orange", "#FF6666"]
         );
@@ -46,7 +47,7 @@ function Prediction() {
     }, [lineChartData]);
 
 
-    // does a post request based on the argument borrowingInput. invokes the backend function to then return data    
+    // This should filter the data to a single year (we could do a range of years if we have time)
     function updateLineChart(DateInput) {
 
         if (isNaN(DateInput))
@@ -54,10 +55,25 @@ function Prediction() {
             return <div>You can only input a year.</div>;
         }
 
-        const Year = DateInput;
-        dateRange = predictionData
+        if (isDayjs(DateInput)) // just checking the MUI date picker isn't a problem
+        {
+            const Year = dayjs(DateInput);
+            const start = Year.startOf();
+            const end = Year.endOf();
 
-        setLineChartData(dateRange);
+            // I'm afraid that without actually seeing what the data type looks like I couldn't really start the next part
+            // The idea is that if it's an array, loop through and discard any data from dates outside the range, without changing the original raw data
+            // Not changing the raw data is so we don't have to ask the backend for it anymore
+            const dateRange = predictionData
+            // remove dateRange values before start
+            // remove dateRange values after end
+
+            setLineChartData(dateRange); // providing new data to the line chart
+        }
+        else
+        {
+            return <div>Error: Date picker is not working properly</div>
+        }
     };
 
 
@@ -74,7 +90,8 @@ function Prediction() {
 
                     <Grid container size={2} rowSpacing={1}>
                         <Grid container size={1}>
-                            <Typography className='text_box' align='justify' xs={{border: '2px solid #1976d2' , borderRadius: '16px'}}>
+                            {/* This stuff here could change it was just copied over from Affordability */}
+                            <Typography className='text_box' align='justify' xs={{border: '2px solid #1976d2' , borderRadius: '16px'}}> 
                                 The median weekly income of Australia is $1,500 in 2023. If that person works 50 weeks of the year
                                 then that comes to a total of $75,000 per year. Assuming monthly expenses of 1,000 per month, 
                                 this particular person can borrow a maximum of $394,000 to pay for their property. 
@@ -93,6 +110,7 @@ function Prediction() {
                                     <DateCalendar 
                                         views={['year']}
                                         openTo="year"
+                                        // the commented out version threw errors but the new one doesn't so could remove
                                         onChange={ (newValue) => setDate(newValue) }
                                         // onChange={ (event) => { setDate(event.target.value); } }
                                     />
@@ -100,6 +118,7 @@ function Prediction() {
                             </Box>
                             <Grid container spacing={10} columns={2} style={{ paddingTop: '20px' }}>
                                 <Grid size={2}>
+                                    {/* puts the new chart data on the page */}
                                     <Button variant="outlined" onClick={() => updateLineChart(date)}>Predict Prices</Button>
                                 </Grid>
                             </Grid>
