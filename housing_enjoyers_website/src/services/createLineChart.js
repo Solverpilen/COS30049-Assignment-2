@@ -6,11 +6,6 @@ ChartJS.register();
 
 function createLineChart(Label, Labels, Data, backGroundColor, Bordercolor) {
 
-    const config = {
-        type: 'line',
-        data: data,
-    };
-
     const data = {
 		labels: Labels,
 		datasets: [
@@ -29,6 +24,7 @@ function createLineChart(Label, Labels, Data, backGroundColor, Bordercolor) {
 	};
 
 	const options = {
+        type: 'line',
 		plugins: {
 		legend: {
 			position: 'top',

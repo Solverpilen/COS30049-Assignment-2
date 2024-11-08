@@ -1,6 +1,7 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import dayjs from 'dayjs';
 import { 
     Grid2 as Grid, 
     Container, Box, Button, Typography 
@@ -17,13 +18,15 @@ function Prediction() {
     const [date, setDate] = useState('');
     const [lineChartData, setLineChartData] = useState('');
     const [currentLineChart, setCurrentLineChart] = useState('');
+    const [predictionData, setPredictionData] = useState('');
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/model.py')
+        axios.get('http://localhost:8000/models/LinearRegModel')
             .then(response => {
                 console.log('Fetched Year and prediction data', response.data);
-                setLineChartData(response.data.price_prediction);
+                setPredictionData(response.data.price_prediction);
+                setLineChartData(predictionData);
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []); 
@@ -34,10 +37,10 @@ function Prediction() {
     useEffect(() => {
 
         const personalisedLineChart = createLineChart("Predicted House Pricing", 
-            lineChartData.x, 
-            lineChartData.y, 
+            lineChartData.x, lineChartData.y, 
             ["blue", "green", "orange", "#FF6666"], 
-            ["blue", "green", "orange", "#FF6666"]);
+            ["blue", "green", "orange", "#FF6666"]
+        );
         setCurrentLineChart(personalisedLineChart); // Set the chart to the personalised one
         
     }, [lineChartData]);
@@ -48,19 +51,13 @@ function Prediction() {
 
         if (isNaN(DateInput))
         {
-            return <div>You can only input a year and month.</div>;
+            return <div>You can only input a year.</div>;
         }
 
-        const Date = DateInput;
+        const Year = DateInput;
+        dateRange = predictionData
 
-        axios.post(`http://localhost:8000/price_prediction/${Date}`)
-        .then(response => {
-            console.log('Fetched Data:', response.data);
-
-            // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
-
-            setLineChartData(response.data.ratings);
-        })
+        setLineChartData(dateRange);
     };
 
 
@@ -94,9 +91,10 @@ function Prediction() {
                             <Box style={{padding: '2em 4em 0em'}}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DateCalendar 
-                                        views={['month', 'year']}
+                                        views={['year']}
                                         openTo="year"
-                                        onChange={ (event) => { setDate(parseInt(event.target.value)); } }
+                                        onChange={ (newValue) => setDate(newValue) }
+                                        // onChange={ (event) => { setDate(event.target.value); } }
                                     />
                                 </LocalizationProvider>
                             </Box>
