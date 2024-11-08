@@ -96,7 +96,7 @@ async def get_housing_data(target_date: str):
 '''
 
 # Pass trained data from linear model backend to frontend 
-@app.get("model.py") # change url here 
+@app.get("/models/LinearRegModel") # change url here 
 async def lineardata():
     try:
         price_prediction = linear_model.predict()
@@ -105,7 +105,7 @@ async def lineardata():
         raise HTTPException(status_code=500, detail=str(e))
     
 # Pass trained data from clustering model backend to frontend 
-@app.get("model.py") # change url here 
+@app.get("/models/ClusterModel") # change url here 
 async def clusterdata():
     try:
         cluster_prediction = kmeans_model.predict()

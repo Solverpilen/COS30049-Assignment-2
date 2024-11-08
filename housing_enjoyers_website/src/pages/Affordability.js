@@ -19,18 +19,21 @@ function Affordability() {
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/price_prediction/default_pie_chart')
+        axios.get('http://localhost:8000/models/ClusterModel')
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setPieChartData(response.data.ratings); // Update state with fetched data
             })
             .catch(error => console.error('Error fetching data:', error));
 
-        axios.get('http://localhost:8000/price_prediction/default_bar_chart')
-            .then(response => {
-                console.log('Fetched bedroom, bathroom data', response.data);
-                setBarChartData(response.data.total_ratings);
-            });
+            // IMPORTANT
+            // Needs new backend connection
+            // IMPORTANT
+        // axios.get('http://localhost:8000/price_prediction/default_bar_chart')
+        //     .then(response => {
+        //         console.log('Fetched bedroom, bathroom data', response.data);
+        //         setBarChartData(response.data.total_ratings);
+        //     });
 
 
    
