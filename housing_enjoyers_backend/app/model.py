@@ -7,18 +7,29 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import joblib
 from sklearn.preprocessing import StandardScaler
+import os
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the path to the Cleaned_Datasets directory
+
+data_path = os.path.join(current_dir, "models", "Cleaned_Datasets", "Dataset_Combined.csv")
 
 # Class for training and predicting with a Linear Regression model
 class LinearRegressionModel:
     def __init__(self):
+
         # Initialize the Linear Regression model
         self.model = LinearRegression()
 
     # Function to fetch data for Line Chart
     def predict(self):
 
-        data = pd.read_json("Data/testdata.json") #change path based on project directory
+
+
+        data = pd.read_csv(data_path) #change path based on project directory
+
+        
         X = data[['Rooms']]  # Features for the model
 
        
@@ -55,7 +66,7 @@ class KMeansModel:
     def predict(self):
 
 
-        data = pd.read_json("Data/testdata.json")#change path based on project directory
+        data = pd.read_csv(data_path)#change path based on project directory
 
         # Select feature based on the specified target variable
         X = data[['Price', 'Bathroom']]
@@ -83,6 +94,8 @@ class KMeansModel:
                 response.append({"Level": "Moderate", "cluster": cluster})
             elif cluster == 2:
                 response.append({"Level": "High", "cluster": cluster})
+
+        print()
         return response
     
 
