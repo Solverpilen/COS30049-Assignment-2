@@ -37,8 +37,14 @@ function Prediction() {
     // the current pie chart
     useEffect(() => {
 
+        const yData = []
+        
+        lineChartData.Array.forEach(element => {
+            yData.push(element);
+        });
+
         const personalisedLineChart = createLineChart("Predicted House Pricing", 
-            lineChartData.x, lineChartData.y, // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better
+            '', yData, // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better
             ["blue", "green", "orange", "#FF6666"], 
             ["blue", "green", "orange", "#FF6666"]
         );

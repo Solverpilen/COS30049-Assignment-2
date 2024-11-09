@@ -20,7 +20,7 @@ function createLineChart(Label, Labels, Data, backGroundColor, Bordercolor) {
 		},
 
 		
-		],
+		]
 	};
 
 	const options = {
