@@ -5,8 +5,18 @@ from datetime import datetime, timedelta
 from pickle import load
 from model import LinearRegressionModel, KMeansModel
 import pandas as pd
+from Clustering import X as Data
 
 
+def affordability_category(house_price, borrowing_price):
+    if  house_price <= borrowing_price/4:
+        return 'high'
+    elif borrowing_price/4 <= house_price <= borrowing_price:
+        return 'medium'
+    elif borrowing_price <= house_price <= borrowing_price + 300000:
+        return 'low'
+    else:
+        return 'very low'
 app = FastAPI()
 
 
@@ -22,10 +32,9 @@ app.add_middleware(
 )
 
 
-'''
-def pie_chart_ratings(borrowing_price):
+def pie_chart_ratings(borrowing_price,data):
     high = medium = low = very_low = 0
-    ratings = X_Bedroom['Price'].apply(lambda price: affordability_category(price, borrowing_price))
+    ratings = data['Price'].apply(lambda price: affordability_category(price, borrowing_price))
 
     for rating in ratings:
         if rating == 'high':
@@ -46,10 +55,10 @@ class PricePredictionRequest(BaseModel):
 
 
 
-@app.post("/price_prediction/")
-async def price_prediction(req: PricePredictionRequest):
+@app.post("/price_prediction/{req}")
+async def price_prediction(req: int):
     try:
-        high, medium, low, very_low = pie_chart_ratings(req.price_input)
+        high, medium, low, very_low = pie_chart_ratings(req, Data)
         return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very_low': very_low}}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -57,8 +66,10 @@ async def price_prediction(req: PricePredictionRequest):
 
 @app.get("/price_prediction/default_pie_chart")
 async def default_pie_chart():
+
+    data = Data
     borrowing_price = 394300  
-    high, medium, low, very_low = pie_chart_ratings(borrowing_price)
+    high, medium, low, very_low = pie_chart_ratings(borrowing_price, data)
     return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very_low': very_low}}
 
 
@@ -88,7 +99,7 @@ async def get_housing_data(target_date: str):
         return {"status": "success", "data": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-'''
+
 
 
 
@@ -111,6 +122,7 @@ async def lineardata():
 async def clusterdata():
     try:
         cluster_prediction = kmeans_model.predict()
+
         return {"data": cluster_prediction}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

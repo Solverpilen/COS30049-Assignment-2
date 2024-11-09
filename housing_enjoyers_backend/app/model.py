@@ -49,7 +49,7 @@ class LinearRegressionModel:
         print(predictions)
 
         # Format the response with time and prediction values for each row
-        response = []
+        response = {}
         for i, row in data.iterrows():
             date = row["Date"]
             predicted = predictions[i]
@@ -85,7 +85,7 @@ class KMeansModel:
 
 
         # Map cluster numbers to descriptive levels and prepare response
-        response = []
+        response = {}
         for i, row in data.iterrows():
             cluster = int(clusters[i])
             if cluster == 0:

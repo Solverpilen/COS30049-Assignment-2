@@ -17,17 +17,21 @@ import createLineChart from '../services/createLineChart';
 function Prediction() {
     const [date, setDate] = useState(''); // The date value from the date picker (should only be a year value)
     const [lineChartData, setLineChartData] = useState(''); // The data passed into createLineChart so that the line chart can be rendered
-    const [currentLineChart, setCurrentLineChart] = useState(''); // The actual chart that gets displayed
-    const [predictionData, setPredictionData] = useState(''); // the raw data from the server which gets filtered by the date (not sure if best method)
+    const [currentLineChart, setCurrentLineChart] = useState([]); // The actual chart that gets displayed
+    const [predictionData, setPredictionData] = useState([]); // the raw data from the server which gets filtered by the date (not sure if best method)
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
         axios.get('http://localhost:8000/models/LinearRegModel') // This may need to change when Bryan makes backend fixes
             .then(response => {
+
+                setLineChartData(response.data)
                 console.log('Fetched Year and prediction data', response.data);
                 // these 2 should initially be the same to show all data
-                setPredictionData(response.data.price_prediction);
-                setLineChartData(predictionData);
+
+    
+
+
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []); 
@@ -37,11 +41,15 @@ function Prediction() {
     // the current pie chart
     useEffect(() => {
 
-        const yData = []
+        const yData = [];
+        console.log("line chart data", lineChartData["0"]);
+
+
+        console.log(lineChartData["0"].x);
         
-        lineChartData.Array.forEach(element => {
-            yData.push(element);
-        });
+        // lineChartData.forEach(element => {
+        //     yData.push(element);
+        // });
 
         const personalisedLineChart = createLineChart("Predicted House Pricing", 
             '', yData, // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better

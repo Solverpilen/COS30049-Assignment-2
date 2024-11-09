@@ -11,7 +11,7 @@ import BedBathAffordability from '../components/BedBathAffordability.js'
 
 function Affordability() {
 
-    const [pieChartData, setPieChartData] = useState({});
+    const [pieChartData, setPieChartData] = useState('');
     const [borrow, setBorrow] = useState('');
     const [currentPieChart, setCurrentPieChart] = useState('');
     const [barChartData, setBarChartData] = useState('');
@@ -19,7 +19,7 @@ function Affordability() {
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
-        axios.get('http://localhost:8000/models/ClusterModel')
+        axios.get('http://localhost:8000/price_prediction/default_pie_chart')
             .then(response => {
                 console.log('Fetched Data:', response.data); // Log data for debugging
                 setPieChartData(response.data.ratings); // Update state with fetched data
@@ -30,10 +30,10 @@ function Affordability() {
             // Needs new backend connection
             // IMPORTANT
         // axios.get('http://localhost:8000/price_prediction/default_bar_chart')
-        //     .then(response => {
-        //         console.log('Fetched bedroom, bathroom data', response.data);
-        //         setBarChartData(response.data.total_ratings);
-        //     });
+        // //     .then(response => {
+        // //         console.log('Fetched bedroom, bathroom data', response.data);
+        // //         setBarChartData(response.data.total_ratings);
+        // //     });
 
 
    
@@ -43,6 +43,8 @@ function Affordability() {
     // use effect takes place once the chartData changes, creating a new pie chart and setting it to
     // the current pie chart
     useEffect(() => {
+
+        console.log(pieChartData[0])
 
         const personalisedPieChart = createPieChart("Personal Affordability Options", 
             ["High", "Medium", "Low", "Very Low"], 
@@ -92,7 +94,7 @@ function Affordability() {
     <div className="App">
         <ResponsiveAppBar/>
 
-        <h1>React Line Chart with Chart.js</h1>
+        <h1>Affordability Options Pie Chart</h1>
         <Container maxWidth="lg" style={{ marginTop: '200px'}} xs={{ display: 'flex' }}>
         {/* Grid Container to center the charts */}
         <Grid container spacing={4}>
@@ -136,7 +138,6 @@ function Affordability() {
        
         </Container>
 
-        <BedBathAffordability/>
    
    
 
