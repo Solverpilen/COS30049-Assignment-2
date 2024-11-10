@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, date
 from model import LinearRegressionModel, KMeansModel
-from Clustering import X as Data
+from utils.Clustering import X as Data
 from utils.PieChartFunctions import pie_chart_ratings, cluster_pie_chart_ratings
 from utils.LineChartFunctions import binarySearch
     

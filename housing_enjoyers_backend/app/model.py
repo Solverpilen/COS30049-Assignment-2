@@ -2,7 +2,6 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.cluster import KMeans
-import joblib
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,9 +26,6 @@ class LinearRegressionModel:
 
         # Train the model
         self.model.fit(X, y)
-
-        # Save the model to a file
-        joblib.dump(self.model, 'linear.pkl')
 
         # Evaluate the model
         predictions = self.model.predict(X)
@@ -67,9 +63,6 @@ class KMeansModel:
         # Train the model
         self.model.fit(X)
 
-        # Save the model to a file
-        joblib.dump(self.model, 'kmeans.pkl')
-
         # Assign clusters to the training data
         clusters = self.model.predict(X)
         data['Cluster'] = clusters # Add cluster labels to the dataset
@@ -89,12 +82,6 @@ class KMeansModel:
 
         print()
         return response
-    
-
-
-
-
-
 
 
 if __name__ == "__main__":    
