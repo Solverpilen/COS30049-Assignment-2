@@ -11,7 +11,6 @@ import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Construct the path to the Cleaned_Datasets directory
 
 data_path = os.path.join(current_dir, "models", "Cleaned_Datasets", "Dataset_Combined.csv")
 
@@ -49,12 +48,15 @@ class LinearRegressionModel:
         print(predictions)
 
         # Format the response with time and prediction values for each row
-        response = {}
+        response = []
         for i, row in data.iterrows():
             date = row["Date"]
             predicted = predictions[i]
-            response.append({"x": date, "y": round(predicted,2)})
+            response.append({'x': date, 'y': round(predicted, 2)})
+
         return response
+    
+    
     
     
 # Class for training and predicting with a KMeans clustering model
@@ -85,7 +87,7 @@ class KMeansModel:
 
 
         # Map cluster numbers to descriptive levels and prepare response
-        response = {}
+        response = []
         for i, row in data.iterrows():
             cluster = int(clusters[i])
             if cluster == 0:

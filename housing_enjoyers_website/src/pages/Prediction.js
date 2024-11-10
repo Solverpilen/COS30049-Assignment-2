@@ -29,9 +29,6 @@ function Prediction() {
                 console.log('Fetched Year and prediction data', response.data);
                 // these 2 should initially be the same to show all data
 
-    
-
-
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []); 
@@ -42,14 +39,8 @@ function Prediction() {
     useEffect(() => {
 
         const yData = [];
-        console.log("line chart data", lineChartData["0"]);
-
-
-        console.log(lineChartData["0"].x);
         
-        // lineChartData.forEach(element => {
-        //     yData.push(element);
-        // });
+        console.log("line chart data", lineChartData['data']);
 
         const personalisedLineChart = createLineChart("Predicted House Pricing", 
             '', yData, // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better

@@ -1,4 +1,4 @@
-# Housing Market analysis by machine-learning
+# Housing Market analysis and website by machine-learning
 
 !!!HOW TO RUN CODE!!!
 
@@ -8,6 +8,10 @@
 - sckikit-learn
 - seaborn
 - matplotlib
+- chartjs
+- chart-js-react
+- date
+= react router dom
 
 ### Execute commands in terminal:
 
