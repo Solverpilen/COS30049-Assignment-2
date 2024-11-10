@@ -1,12 +1,8 @@
 import pandas as pd
-import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.cluster import KMeans
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 import joblib
-from sklearn.preprocessing import StandardScaler
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +36,6 @@ class LinearRegressionModel:
         mse = mean_squared_error(y, predictions)
         r2 = r2_score(y, predictions)
         print(f"Linear Regression Model trained. MSE: {mse}, R²: {r2}")
-        print(predictions)
 
         # Format the response with time and prediction values for each row
         response = []

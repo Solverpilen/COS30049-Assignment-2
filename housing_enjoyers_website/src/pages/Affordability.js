@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react';
-import BedBathAffordability from '../components/BedBathAffordability.js'
 
 
 function Affordability() {

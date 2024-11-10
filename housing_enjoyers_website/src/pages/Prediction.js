@@ -1,7 +1,7 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import dayjs, { isDayjs, startOf } from 'dayjs'; // This is the date library I chose, it has a small file size
+import dayjs, { isDayjs } from 'dayjs'; // This is the date library I chose, it has a small file size
 import { 
     Grid2 as Grid, 
     Container, Box, Button, Typography 
@@ -36,7 +36,7 @@ function Prediction() {
     
     // use effect takes place once the chartData changes
     useEffect(() => {
-        if (lineChartData.data & lineChartData.data.length > 0)
+        if (lineChartData & lineChartData.length > 0)
         {
             console.log("line chart data", lineChartData);
     
@@ -63,15 +63,12 @@ function Prediction() {
 
         if (isDayjs(DateInput)) // just checking the MUI date picker isn't a problem
         {
-            const Year = dayjs(DateInput);
-            const start = Year.startOf();
-            const end = Year.endOf();
-            const startIndex = 0;
-            const endIndex = 0;
+            const Year = dayjs(DateInput).format("YYYY-MM-DD");
 
-            axios.get(`http://localhost:8000/models/LinearRegModel/${Year.format("YYYY-MM-DD")}`)
+            axios.get(`http://localhost:8000/models/LinearRegModel/${Year}`)
                 .then(response => {
-
+                    setLineChartData(response.data['data'])
+                    console.log('Fetched filtered Year and prediction data', response.data);
                 })
                 .catch(error => console.error('Error fetching data:', error))
 

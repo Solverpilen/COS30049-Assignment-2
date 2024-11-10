@@ -1,12 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from datetime import datetime, timedelta, date
-from pickle import load
 from model import LinearRegressionModel, KMeansModel
 import pandas as pd
 from Clustering import X as Data
 from math import floor
+from time import mktime
 
 
 def affordability_category(house_price, borrowing_price):
@@ -48,13 +47,6 @@ def pie_chart_ratings(borrowing_price,data):
             very_low += 1
 
     return high, medium, low, very_low
-
-
-class PricePredictionRequest(BaseModel):
-    price_input: int
-
-
-
 
 @app.post("/price_prediction/{req}")
 async def price_prediction(req: int):
@@ -99,34 +91,51 @@ async def get_housing_data(target_date: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 def foundDate(array: list, index: int, target: date, after: bool, arraylen: int) -> int | str :
-    if (array[index]['x'] == target):
+    t = mktime(target.timetuple())
+    print("    Finding Date Function - Running:", index, array[index], t)
+    if (array[index]['x'] == t):
+        print("      returning index: ", index)
         return index # Lucky
     elif (after == False):
-        if (index == 0 & array[index]['x'] > target):
+        print("      after == False")
+        if ((index == 0) & (array[index]['x'] > t)):
+            print("        returning index: ", index)
             return index # year is before our range
-        elif (array[index - 1]['x'] < target < array[index]['x']):
+        elif (array[index - 1]['x'] < t < array[index]['x']):
+            print("        returning index - 1: ", index - 1)
             return index - 1
         else:
+            print("        returning above")
             return 'above'
     else:
-        if (index == arraylen & array[index]['x'] < target):
+        print("      after == True")
+        if ((index == arraylen) & (array[index]['x'] < t)):
+            print("        returning index: ", index)
             return index # year is after our range for some reason (we should be predicting)
-        elif (array[index]['x'] < target < array[index + 1]['x']):
+        elif (array[index]['x'] < t < array[index + 1]['x']):
+            print("        returning index + 1: ", index + 1)
             return index + 1
         else:
+            print("        returning below")
             return 'below'
+        
+    return 'error' # Code should be unreachable
 
 
 
-def binarySearch(array: list, target: date, after=False) -> int | False:
-    arraylen = len(array)
+def binarySearch(array: list, target: date, after=False) -> int | bool:
+    arraylen = len(array) - 1
     L: int = 0
     R: int = arraylen
     m: int = 0
+    print("  initialised variables")
 
+    print("  looping...")
     while L <= R:
         m = floor((L + R) / 2)
+        print("    set midpoint:", m)
         res = foundDate(array, m, target, after, arraylen)
+        print("    checked date: ", res)
         match (res):
             case 'above':
                 L = m + 1
@@ -134,6 +143,8 @@ def binarySearch(array: list, target: date, after=False) -> int | False:
                 R = m - 1
             case _:
                 return res
+        print("    Loop Again - L: ", L, " R: ", R, " m: ", m)
+    print("  loop ended returning False")
     
     return False
 
@@ -154,23 +165,34 @@ async def lineardata():
     
 # Pass trained data from linear model backend to frontend within a date range
 @app.get("/models/LinearRegModel/{target_date_str}") 
-async def lineardata(target_date_str):
+async def filteredlineardata(target_date_str):
     target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
     year_start = date(target_date.year, 1, 1)
     year_end = date(target_date.year, 12, 31)
 
     try:
+        print("predicting...")
         price_prediction = linear_model.predict()
+        print("done")
+        print("searching for start index...")
         start_index = binarySearch(price_prediction, year_start)
+        print("done")
+        print("searching for end index...")
         end_index = binarySearch(price_prediction, year_end, after=True)
+        print("done")
 
+        print("checking start and end indexes...")
         if (start_index == False or end_index == False):
+            print("either start or end wasn't found")
             raise HTTPException(status_code=500, detail=str(e))
-        
+        print("done")
+
         result = []
         
+        print("appending data to new list...")
         for i in range(start_index, end_index):
             result.append(price_prediction[i])
+        print("done")
 
         return {'data': result}
     except Exception as e:
@@ -190,4 +212,40 @@ async def clusterdata():
 # Initiate Backend Server 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    
+
+    # ------------------------------------------------------------------------
+    target_date_str = "2015-11-10"
+
+    target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
+    year_start = date(target_date.year, 1, 1)
+    year_end = date(target_date.year, 12, 31)
+
+    print("predicting...")
+    price_prediction = linear_model.predict()
+    print("done")
+    print("searching for start index...")
+    start_index = binarySearch(price_prediction, year_start)
+    print("done")
+    print("searching for end index...")
+    end_index = binarySearch(price_prediction, year_end, after=True)
+    print("done")
+
+    print("checking start and end indexes...")
+    if (start_index == False or end_index == False):
+        print("  either start or end wasn't found")
+        exit()
+        # raise HTTPException(status_code=500, detail=str(e))
+    print("done")
+
+    result = []
+    
+    print("appending data to new list...")
+    for i in range(start_index, end_index):
+        result.append(price_prediction[i])
+    print("done")
+    print(result)
+        
+    # ------------------------------------------------------------------------

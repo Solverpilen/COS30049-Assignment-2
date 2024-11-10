@@ -44,23 +44,6 @@ function createAffordabilityBarChart(Labels, highData, mediumData, lowData, very
     ],
   };
 
-  const options = {
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      tooltip: {
-        callbacks: {
-          label: function (tooltipItem) {
-            const value = tooltipItem.raw; // Get the raw value (e.g., 12, 19)
-            const label = tooltipItem.label; // Get the label (e.g., "Red")
-            return `${label}: ${value} units`; // Custom tooltip text
-          },
-        },
-      },
-    },
-  };
 
   return <Bar data= {data} options width={500} height={250}/>;
 };

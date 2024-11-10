@@ -1,10 +1,7 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 pd.options.mode.use_inf_as_na = True
 
-#WorkingDirectory = "COS30049-Assignment-2/"
 RawDataDirectory = "Raw_Datasets/"
 CleanDataDirectory = "Cleaned_Datasets/"
 
@@ -26,26 +23,3 @@ Data = pd.read_csv(CleanDataDirectory + "Dataset_Combined.csv",
                         "Price": "Int32"
                         }
                     )
-
-# plt.figure(figsize=(10, 8))
-# corr_matrix = Data.corr(numeric_only=True)
-# sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
-# plt.title('Correlation Matrix Heatmap')
-# plt.show()
-
-# plt.figure(figsize=(10, 8))
-# plt.scatter(Data['Date'], Data['Price'], alpha=0.6, color='b')
-# plt.title('Scatter Plot of Date Sold vs. House Price')
-# plt.xlabel('Date Sold')
-# plt.ylabel('House Price (in $100,000)')
-# plt.grid(True)
-# plt.show()
-
-Data = Data[["Price", "Date"]]
-plt.figure(figsize=(10, 8))
-plt.boxplot(x=Data, vert=True, widths=0.15)
-plt.title('Box Plot of Date Sold vs. House Price')
-plt.xlabel('Date Sold')
-plt.ylabel('House Price (in $100,000)')
-plt.grid(True)
-plt.show()

@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
@@ -26,7 +25,6 @@ y_pred = model.predict(X_test)
 # Print model performance
 print('Mean Squared Error: %.2f' % mean_squared_error(y_test, y_pred))
 print('R^2 Score: %.2f' % r2_score(y_test, y_pred))
-# print('Prediction Gradient: %10f' % )
 
 # Visualize the results
 plt.figure(figsize=(10, 6))
