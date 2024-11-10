@@ -16,8 +16,8 @@ function Affordability() {
     const [currentPieChart, setCurrentPieChart] = useState('');
     const [barChartData, setBarChartData] = useState('');
     const [lineChartData, setLineChartData] = useState('');
-    const [error, setError] = useState(false);
-    const [nameError, setNameError] = useState(false)
+    const [error, setError] = useState(true);
+    const [nameError, setNameError] = useState(true)
 
      //useeffect runs the code below on first render to get the default pie chart
      useEffect(() => {
@@ -63,21 +63,25 @@ function Affordability() {
     // does a post request based on the argument borrowingInput. invokes the backend function to then return data
     function updatePieChart(borrowingInput) {
 
-        if (isNaN(borrowingInput))
+        if (!Number.isInteger(borrowingInput))
         {
             return <div>You can only input a whole number without seperators. e.g. 450000</div>;
         }
+        else {
+            const borrowInput = borrowingInput;
 
-        const borrowInput = borrowingInput;
+            axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
+            .then(response => {
+                console.log('Fetched Data:', response.data);
+    
+                // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
+    
+                setPieChartData(response.data.ratings);
+            })
+            
+        }
 
-        axios.post(`http://localhost:8000/price_prediction/${borrowInput}`)
-        .then(response => {
-            console.log('Fetched Data:', response.data);
 
-            // sets the chartData to the response from the backend, invoking the use effect that changes the chart data
-
-            setPieChartData(response.data.ratings);
-        })
     };
 
     const handleNameChange = event => {
