@@ -48,6 +48,20 @@ def pie_chart_ratings(borrowing_price,data):
 
     return high, medium, low, very_low
 
+def cluster_pie_chart_ratings(data):
+
+    high, moderate, low = 0
+
+    for rating in data['data']:
+        if rating.Level == "High":
+            high += 1
+        elif rating.Level == "Moderate":
+            moderate += 1
+        elif rating.Level == "low":
+            low += 1
+    
+    return high, moderate, low
+
 
 class PricePredictionRequest(BaseModel):
     price_input: int
@@ -123,7 +137,9 @@ async def clusterdata():
     try:
         cluster_prediction = kmeans_model.predict()
 
-        return {"data": cluster_prediction}
+        high, moderate, low = cluster_pie_chart_ratings(cluster_prediction)
+
+        return { 'ratings': { 'high': high, 'moderate' : moderate, 'low': low }}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

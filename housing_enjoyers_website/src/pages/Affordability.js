@@ -17,37 +17,26 @@ function Affordability() {
     const [barChartData, setBarChartData] = useState('');
     const [lineChartData, setLineChartData] = useState('');
 
-    // useeffect runs the code below on first render to get the default pie chart
-    useEffect(() => {
-        axios.get('http://localhost:8000/price_prediction/default_pie_chart')
-            .then(response => {
-                console.log('Fetched Data:', response.data); // Log data for debugging
-                setPieChartData(response.data.ratings); // Update state with fetched data
-            })
-            .catch(error => console.error('Error fetching data:', error));
+     //useeffect runs the code below on first render to get the default pie chart
+     useEffect(() => {
+         axios.get('http://localhost:8000/price_prediction/default_pie_chart')
+             .then(response => {
+                 console.log('Fetched Data:', response.data); // Log data for debugging
+                 setPieChartData(response.data.ratings); // Update state with fetched data
+                })
+             .catch(error => console.error('Error fetching data:', error));
 
-            // IMPORTANT
-            // Needs new backend connection
-            // IMPORTANT
-        // axios.get('http://localhost:8000/price_prediction/default_bar_chart')
-        // //     .then(response => {
-        // //         console.log('Fetched bedroom, bathroom data', response.data);
-        // //         setBarChartData(response.data.total_ratings);
-        // //     });
-
-
-   
     }, []); 
+
 
     
     // use effect takes place once the chartData changes, creating a new pie chart and setting it to
     // the current pie chart
     useEffect(() => {
 
-        console.log(pieChartData[0])
 
         const personalisedPieChart = createPieChart("Personal Affordability Options", 
-            ["High", "Medium", "Low", "Very Low"], 
+            ["High", "medium", "Low", "Very Low"], 
             [pieChartData.high, pieChartData.medium, pieChartData.low, pieChartData.very_low], 
             ["blue", "green", "orange", "#FF6666"], 
             ["blue", "green", "orange", "#FF6666"]);
@@ -92,7 +81,10 @@ function Affordability() {
 
     return (
     <div className="App">
-        <ResponsiveAppBar/>
+
+        
+        {/* navbar for every page */}
+        <ResponsiveAppBar/>  
 
         <h1>Affordability Options Pie Chart</h1>
         <Container maxWidth="lg" style={{ marginTop: '200px'}} xs={{ display: 'flex' }}>
@@ -102,9 +94,13 @@ function Affordability() {
 
         <Grid container columns={2} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
+        
+        {/* Grid that holds the pie chart */}
         <Grid size={1}>
             <div>{currentPieChart}</div>
         </Grid>
+
+        {/* Grid that holds the rest of the content, beginning with the explanation of the pag */}
 
         <Grid container size={1} direction="column">
             <Typography className='text_box' align='justify' xs={{border: '2px solid #1976d2' , borderRadius: '16px'}}>
