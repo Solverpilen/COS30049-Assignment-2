@@ -16,7 +16,7 @@ function Affordability() {
     const [currentPieChart, setCurrentPieChart] = useState('');
     const [barChartData, setBarChartData] = useState('');
 
-    // useeffect runs the code below on first render to get the default pie chart and bar charts
+    // useeffect runs the code below on first render to get the default pie chart
     useEffect(() => {
         axios.get('http://localhost:8000/price_prediction/default_pie_chart')
             .then(response => {

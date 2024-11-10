@@ -113,7 +113,7 @@ kmeans_model = KMeansModel()
 async def lineardata():
     try:
         price_prediction = linear_model.predict()
-        return {"data": price_prediction}
+        return {'data': price_prediction}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
