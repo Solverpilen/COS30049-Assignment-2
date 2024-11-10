@@ -15,7 +15,6 @@ function Affordability() {
     const [borrow, setBorrow] = useState('');
     const [currentPieChart, setCurrentPieChart] = useState('');
     const [barChartData, setBarChartData] = useState('');
-    const [lineChartData, setLineChartData] = useState('');
 
     // useeffect runs the code below on first render to get the default pie chart and bar charts
     useEffect(() => {
