@@ -16,7 +16,7 @@ import createLineChart from '../services/createLineChart';
 
 function Prediction() {
     const [date, setDate] = useState(''); // The date value from the date picker (should only be a year value)
-    const [lineChartData, setLineChartData] = useState(''); // The data passed into createLineChart so that the line chart can be rendered
+    const [lineChartData, setLineChartData] = useState([]); // The data passed into createLineChart so that the line chart can be rendered
     const [currentLineChart, setCurrentLineChart] = useState([]); // The actual chart that gets displayed
     const [predictionData, setPredictionData] = useState([]); // the raw data from the server which gets filtered by the date (not sure if best method)
 
