@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from pickle import load
 from model import LinearRegressionModel, KMeansModel
 import pandas as pd
 from Clustering import X as Data
+from math import floor
 
 
 def affordability_category(house_price, borrowing_price):
@@ -75,12 +76,9 @@ async def default_pie_chart():
 
 def get_filtered_data(file_path, target_date_str):
     try:
-        
         target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
         
-        
         df = pd.read_csv(file_path, parse_dates=['Date'])
-        
         
         start_date = target_date - timedelta(days=7)
         end_date = target_date + timedelta(days=7)
@@ -100,7 +98,44 @@ async def get_housing_data(target_date: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+def foundDate(array: list, index: int, target: date, after: bool, arraylen: int) -> int | str :
+    if (array[index]['x'] == target):
+        return index # Lucky
+    elif (after == False):
+        if (index == 0 & array[index]['x'] > target):
+            return index # year is before our range
+        elif (array[index - 1]['x'] < target < array[index]['x']):
+            return index - 1
+        else:
+            return 'above'
+    else:
+        if (index == arraylen & array[index]['x'] < target):
+            return index # year is after our range for some reason (we should be predicting)
+        elif (array[index]['x'] < target < array[index + 1]['x']):
+            return index + 1
+        else:
+            return 'below'
 
+
+
+def binarySearch(array: list, target: date, after=False) -> int | False:
+    arraylen = len(array)
+    L: int = 0
+    R: int = arraylen
+    m: int = 0
+
+    while L <= R:
+        m = floor((L + R) / 2)
+        res = foundDate(array, m, target, after, arraylen)
+        match (res):
+            case 'above':
+                L = m + 1
+            case 'below':
+                R = m - 1
+            case _:
+                return res
+    
+    return False
 
 
 linear_model = LinearRegressionModel()
@@ -117,6 +152,31 @@ async def lineardata():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+# Pass trained data from linear model backend to frontend within a date range
+@app.get("/models/LinearRegModel/{target_date_str}") 
+async def lineardata(target_date_str):
+    target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
+    year_start = date(target_date.year, 1, 1)
+    year_end = date(target_date.year, 12, 31)
+
+    try:
+        price_prediction = linear_model.predict()
+        start_index = binarySearch(price_prediction, year_start)
+        end_index = binarySearch(price_prediction, year_end, after=True)
+
+        if (start_index == False or end_index == False):
+            raise HTTPException(status_code=500, detail=str(e))
+        
+        result = []
+        
+        for i in range(start_index, end_index):
+            result.append(price_prediction[i])
+
+        return {'data': result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
 # Pass trained data from clustering model backend to frontend 
 @app.get("/models/ClusterModel") 
 async def clusterdata():

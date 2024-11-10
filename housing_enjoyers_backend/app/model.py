@@ -23,15 +23,10 @@ class LinearRegressionModel:
 
     # Function to fetch data for Line Chart
     def predict(self):
-
-
-
         data = pd.read_csv(data_path) #change path based on project directory
 
-        
         X = data[['Rooms']]  # Features for the model
 
-       
         y = data['Price'] 
 
         # Train the model

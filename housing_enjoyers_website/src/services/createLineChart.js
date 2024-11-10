@@ -4,18 +4,17 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register();
 
-function createLineChart(Label, Labels, Data, backGroundColor, Bordercolor) {
+function createLineChart(Labels, Data) {
 
     const data = {
 		labels: Labels,
 		datasets: [
 		{
-			label: Label,
+			label: "Predicted House Pricing",
 			data: Data,
             fill: false,
             tension: 0,
-			backgroundColor: backGroundColor,
-			borderColor:Bordercolor,
+			borderColor: 'rgb(75, 192, 192)',
 			borderWidth: 1,
 		},
 
