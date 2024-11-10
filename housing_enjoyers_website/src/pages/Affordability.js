@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react';
-import BedBathAffordability from '../components/BedBathAffordability.js'
 
 
 function Affordability() {
@@ -14,8 +13,6 @@ function Affordability() {
     const [pieChartData, setPieChartData] = useState('');
     const [borrow, setBorrow] = useState('');
     const [currentPieChart, setCurrentPieChart] = useState('');
-    const [barChartData, setBarChartData] = useState('');
-    const [lineChartData, setLineChartData] = useState('');
     const [error, setError] = useState(true);
     const [nameError, setNameError] = useState(true)
 

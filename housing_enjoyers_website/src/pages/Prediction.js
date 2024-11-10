@@ -1,7 +1,7 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import dayjs, { isDayjs, startOf } from 'dayjs'; // This is the date library I chose, it has a small file size
+import dayjs, { isDayjs } from 'dayjs'; // This is the date library I chose, it has a small file size
 import { 
     Grid2 as Grid, 
     Container, Box, Button, Typography 
@@ -20,43 +20,42 @@ function Prediction() {
     const [currentLineChart, setCurrentLineChart] = useState([]); // The actual chart that gets displayed
     const [predictionData, setPredictionData] = useState([]); // the raw data from the server which gets filtered by the date (not sure if best method)
 
-    // useeffect runs the code below on first render to get the default pie chart and bar charts
+    // useeffect runs the code below on first render to get the default line chart
     useEffect(() => {
-        axios.get('http://localhost:8000/models/LinearRegModel') // This may need to change when Bryan makes backend fixes
+        axios.get('http://localhost:8000/models/LinearRegModel')
             .then(response => {
-                
-                setLineChartData(response.data)
-                
-                console.log('Fetched Year and prediction data', response.data);
                 // these 2 should initially be the same to show all data
+                setPredictionData(response.data['data']);
+                setLineChartData(predictionData);
+                console.log('Fetched Year and prediction data', response.data);
 
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []); 
 
     
-    // use effect takes place once the chartData changes, creating a new pie chart and setting it to
-    // the current pie chart
+    // use effect takes place once the chartData changes
     useEffect(() => {
-
-        if (lineChartData.data && lineChartData.data.length > 0) {
-        
-        console.log("line chart data", lineChartData['data'][0]);
-
-        // const personalisedLineChart = createLineChart("Predicted House Pricing", 
-        //     '', , // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better
-        //     ["blue", "green", "orange", "#FF6666"], 
-        //     ["blue", "green", "orange", "#FF6666"]
-        // );
-        // setCurrentLineChart(personalisedLineChart); // Set the chart to the personalised one
+        if (lineChartData & lineChartData.length > 0)
+        {
+            console.log("line chart data", lineChartData);
+    
+            const yData = [];
+            const xData = [];
+    
+            for (let index = 0; index < lineChartData.length; index++) {
+                yData.push(lineChartData[index]['y']);
+                xData.push(lineChartData[index]['x']);
+            }
+    
+            const personalisedLineChart = createLineChart(xData, yData);
+            setCurrentLineChart(personalisedLineChart); // Set the chart to the personalised one
         }
-        
     }, [lineChartData]);
 
 
     // This should filter the data to a single year (we could do a range of years if we have time)
     function updateLineChart(DateInput) {
-
         if (isNaN(DateInput))
         {
             return <div>You can only input a year.</div>;
@@ -64,9 +63,14 @@ function Prediction() {
 
         if (isDayjs(DateInput)) // just checking the MUI date picker isn't a problem
         {
-            const Year = dayjs(DateInput);
-            const start = Year.startOf();
-            const end = Year.endOf();
+            const Year = dayjs(DateInput).format("YYYY-MM-DD");
+
+            axios.get(`http://localhost:8000/models/LinearRegModel/${Year}`)
+                .then(response => {
+                    setLineChartData(response.data['data'])
+                    console.log('Fetched filtered Year and prediction data', response.data);
+                })
+                .catch(error => console.error('Error fetching data:', error))
 
             // I'm afraid that without actually seeing what the data type looks like I couldn't really start the next part
             // The idea is that if it's an array, loop through and discard any data from dates outside the range, without changing the original raw data

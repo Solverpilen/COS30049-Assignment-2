@@ -1,12 +1,7 @@
 import pandas as pd
-import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.cluster import KMeans
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-import joblib
-from sklearn.preprocessing import StandardScaler
 import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,29 +18,20 @@ class LinearRegressionModel:
 
     # Function to fetch data for Line Chart
     def predict(self):
-
-
-
         data = pd.read_csv(data_path) #change path based on project directory
 
-        
         X = data[['Rooms']]  # Features for the model
 
-       
         y = data['Price'] 
 
         # Train the model
         self.model.fit(X, y)
-
-        # Save the model to a file
-        joblib.dump(self.model, 'linear.pkl')
 
         # Evaluate the model
         predictions = self.model.predict(X)
         mse = mean_squared_error(y, predictions)
         r2 = r2_score(y, predictions)
         print(f"Linear Regression Model trained. MSE: {mse}, R²: {r2}")
-        print(predictions)
 
         # Format the response with time and prediction values for each row
         response = []
@@ -77,9 +63,6 @@ class KMeansModel:
         # Train the model
         self.model.fit(X)
 
-        # Save the model to a file
-        joblib.dump(self.model, 'kmeans.pkl')
-
         # Assign clusters to the training data
         clusters = self.model.predict(X)
         data['Cluster'] = clusters # Add cluster labels to the dataset
@@ -99,12 +82,6 @@ class KMeansModel:
 
         print()
         return response
-    
-
-
-
-
-
 
 
 if __name__ == "__main__":    

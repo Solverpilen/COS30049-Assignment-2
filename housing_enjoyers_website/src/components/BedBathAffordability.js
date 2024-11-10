@@ -1,9 +1,8 @@
 
 import { 
     Grid2 as Grid, 
-    Container, TextField, Box, Button, Typography 
+    Container
 } from '@mui/material';
-import axios from 'axios'
 import React, { useEffect, useState } from 'react';
 import createAffordabilityBarChart from '../services/createAffordabilityBarChart.js';
 

@@ -1,30 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from datetime import datetime, timedelta
-from pickle import load
+from datetime import datetime, date
 from model import LinearRegressionModel, KMeansModel
-import pandas as pd
-from Clustering import X as Data
-
-def affordability_category(house_price, borrowing_price):
-
-    if  house_price <= borrowing_price/4:
-        return 'high'
-    elif borrowing_price/4 <= house_price <= borrowing_price:
-        return 'medium'
-    elif borrowing_price <= house_price <= borrowing_price + 300000:
-        return 'low'
-    else:
-        return 'very low'
+from utils.Clustering import X as Data
+from utils.PieChartFunctions import pie_chart_ratings, cluster_pie_chart_ratings
+from utils.LineChartFunctions import binarySearch
     
 # setting up fast api and cors middleware
 
 app = FastAPI()
 
-
 origins = ["http://localhost:3000"]  
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,53 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 'data' is the pandas data frame used to process the raw data from the AI models
-def pie_chart_ratings(borrowing_price,data):
-    high = medium = low = very_low = 0
-
-    # this allows the 'Price' column to be used as a parameter for affordabiility_category. It goes through all the prices in the data dataframe
-    # and puts it through the function which then returns an array of ratings.
-    ratings = data['Price'].apply(lambda price: affordability_category(price, borrowing_price))
-
-    for rating in ratings:
-        if rating == 'high':
-            high += 1
-        elif rating == 'medium':
-            medium += 1
-        elif rating == 'low':
-            low += 1
-        elif rating == 'very low':
-            very_low += 1
-
-    return high, medium, low, very_low
-
-# obsolete function used for the second pie chart
-
-def cluster_pie_chart_ratings(data):
-
-    high, moderate, low = 0
-
-    for rating in data['data']:
-        if rating.Level == "High":
-            high += 1
-        elif rating.Level == "Moderate":
-            moderate += 1
-        elif rating.Level == "low":
-            low += 1
-
-    return high, moderate, low
-
-
-class PricePredictionRequest(BaseModel):
-    price_input: int
-
 
 # POST request when a user inputs a borrowing price value which is stored in 'req'
-
-@app.post("/price_prediction/{req}")
-
 # function used to get a total amount of ratings for the pie chart, returns a dictionary of ratings, each with a corresponding number of each
-
+@app.post("/price_prediction/{req}")
 async def price_prediction(req: int):
     try:
         high, medium, low, very_low = pie_chart_ratings(req, Data)
@@ -101,39 +44,8 @@ async def default_pie_chart():
     return {'ratings': {'high': high, 'medium': medium, 'low': low, 'very_low': very_low}}
 
 
-def get_filtered_data(file_path, target_date_str):
-    try:
-        
-        target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
-        
-        
-        df = pd.read_csv(file_path, parse_dates=['Date'])
-        
-        
-        start_date = target_date - timedelta(days=7)
-        end_date = target_date + timedelta(days=7)
-        
-        
-        filtered_df = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
-        return filtered_df.to_dict(orient='records')
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing data: {e}")
-
-
-@app.get("/housing_data/{target_date}")
-async def get_housing_data(target_date: str):
-    try:
-        data = get_filtered_data("data/housing_prices.csv", target_date)
-        return {"status": "success", "data": data}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-
-
 linear_model = LinearRegressionModel()
 kmeans_model = KMeansModel()
-
 
 
 # Pass trained data from linear model backend to frontend 
@@ -145,6 +57,31 @@ async def lineardata():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+# Pass trained data from linear model backend to frontend within a date range
+@app.get("/models/LinearRegModel/{target_date_str}") 
+async def filteredlineardata(target_date_str):
+    target_date = datetime.strptime(target_date_str, "%Y-%m-%d")
+    year_start = date(target_date.year, 1, 1)
+    year_end = date(target_date.year, 12, 31)
+
+    try:
+        price_prediction = linear_model.predict()
+        start_index = binarySearch(price_prediction, year_start)
+        end_index = binarySearch(price_prediction, year_end, after=True)
+
+        if (start_index == False or end_index == False):
+            raise HTTPException(status_code=500, detail=str(e))
+
+        result = []
+        
+        for i in range(start_index, end_index):
+            result.append(price_prediction[i])
+
+        return {'data': result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
 # Pass trained data from clustering model backend to frontend 
 @app.get("/models/ClusterModel") 
 async def clusterdata():
