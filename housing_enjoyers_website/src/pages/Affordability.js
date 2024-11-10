@@ -16,6 +16,8 @@ function Affordability() {
     const [currentPieChart, setCurrentPieChart] = useState('');
     const [barChartData, setBarChartData] = useState('');
     const [lineChartData, setLineChartData] = useState('');
+    const [error, setError] = useState(false);
+    const [nameError, setNameError] = useState(false)
 
      //useeffect runs the code below on first render to get the default pie chart
      useEffect(() => {
@@ -27,6 +29,7 @@ function Affordability() {
              .catch(error => console.error('Error fetching data:', error));
 
     }, []); 
+
 
 
     
@@ -77,6 +80,19 @@ function Affordability() {
         })
     };
 
+    const handleNameChange = event => {
+        const value = event.target.value;
+
+        // Check if the value is an integer
+        if (/^[0-9]+$/.test(value)) {
+            setBorrow(parseInt(value));
+
+            setError(false); // Clear any previous error
+        } else {
+            setError(true); 
+
+        }
+    }
 
 
     return (
@@ -117,8 +133,21 @@ function Affordability() {
             </Typography>
 
             <Box style={{padding: '3em 6em 0em'}} >
-                <TextField type="number" id="outlined-basic" label="Maximum borrowing amount ($)" variant="outlined" placeholder="75000" fullWidth
-                    onChange={ (event) => { setBorrow(parseInt(event.target.value)); } }
+                <TextField type="number"
+                    id="outlined-basic"
+                    label="Maximum borrowing amount ($)"
+                    variant="outlined" placeholder="75000" 
+                    fullWidth
+                    onChange={ (event) => { handleNameChange(event) } }
+                    inputProps={{
+                        pattern: "^[0-9]+$",
+                      }}
+
+                     error={error}
+
+                     helperText={
+                        error ? "Please enter a valid whole number" : ""
+                      }
                 />
             </Box>
             <Grid container spacing={10} columns={2} style={{ paddingTop: '50px' }}>

@@ -24,8 +24,9 @@ function Prediction() {
     useEffect(() => {
         axios.get('http://localhost:8000/models/LinearRegModel') // This may need to change when Bryan makes backend fixes
             .then(response => {
-
+                
                 setLineChartData(response.data)
+                
                 console.log('Fetched Year and prediction data', response.data);
                 // these 2 should initially be the same to show all data
 
@@ -38,16 +39,17 @@ function Prediction() {
     // the current pie chart
     useEffect(() => {
 
-        const yData = [];
+        if (lineChartData.data && lineChartData.data.length > 0) {
         
         console.log("line chart data", lineChartData['data'][0]);
 
-        const personalisedLineChart = createLineChart("Predicted House Pricing", 
-            '', yData, // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better
-            ["blue", "green", "orange", "#FF6666"], 
-            ["blue", "green", "orange", "#FF6666"]
-        );
-        setCurrentLineChart(personalisedLineChart); // Set the chart to the personalised one
+        // const personalisedLineChart = createLineChart("Predicted House Pricing", 
+        //     '', , // hopefully this is the correct data, haven't had the backend work for this yet, james you might understand chartjs better
+        //     ["blue", "green", "orange", "#FF6666"], 
+        //     ["blue", "green", "orange", "#FF6666"]
+        // );
+        // setCurrentLineChart(personalisedLineChart); // Set the chart to the personalised one
+        }
         
     }, [lineChartData]);
 
